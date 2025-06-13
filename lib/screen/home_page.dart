@@ -29,10 +29,17 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomImagePickerContainer(imageMargin: 10),
+                padding: const EdgeInsets.all(20),
+                child: CustomImagePickerContainer(
+                  ContainerHeight: 500,
+                  isTitle: true,
+                  // backgroundColor: AppColors.error,
+                  title: "Custom Container",
+                  // imageMargin: 10,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
