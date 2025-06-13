@@ -34,8 +34,8 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: CustomImagePickerContainer(
-                  ContainerHeight: 500,
-                  isTitle: true,
+                  // ContainerHeight: 500,
+                  // isTitle: true,
                   // backgroundColor: AppColors.error,
                   title: "Custom Container",
                   // imageMargin: 10,
