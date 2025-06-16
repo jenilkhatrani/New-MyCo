@@ -7,7 +7,7 @@ import '../custom_widgets/custom_all_assets.dart';
 import '../custom_widgets/custom_assets_history.dart';
 import '../custom_widgets/custom_assets_holder.dart';
 import '../custom_widgets/custom_calender.dart';
-import '../custom_widgets/custom_image_picker_container.dart';
+import '../custom_widgets/custom_image_picker_containe.dart';
 import '../custom_widgets/custom_past_assets.dart';
 import '../custom_widgets/custom_tabbar.dart';
 import '../custom_widgets/image_grid_preview_widget.dart';
@@ -32,13 +32,12 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(20),
+                padding: EdgeInsets.all(20),
                 child: CustomImagePickerContainer(
-                  // ContainerHeight: 500,
-                  // isTitle: true,
-                  // backgroundColor: AppColors.error,
+                  ContainerHeight: 500,
+                  isTitle: true,
+                  backgroundColor: AppColors.imagePickerBg,
                   title: "Custom Container",
-                  // imageMargin: 10,
                 ),
               ),
               Padding(

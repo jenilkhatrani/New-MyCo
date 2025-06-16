@@ -60,7 +60,7 @@ class _CustomImagePickerContainerState
           },
 
           child: DashedBorderContainer(
-            height: widget.ContainerHeight ?? 160,
+            height: widget.ContainerHeight ?? 150,
             width: double.infinity,
 
             borderRadius: widget.borderRadius ?? 12,
@@ -70,11 +70,13 @@ class _CustomImagePickerContainerState
                 ? Stack(
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(
+                          widget.borderRadius ?? 12,
+                        ),
                         child: Image.file(
                           _pickedImage!,
-                          // width: double.infinity,
-                          fit: BoxFit.fill,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
                         ),
                       ),
                       Positioned(
@@ -198,7 +200,7 @@ class _CustomImagePickerContainerState
   void openImagePicker(BuildContext context) async {
     final File? selectedFile = await showImageFilePicker(
       context: context,
-      // selectDocument: true,
+      selectDocument: true,
     );
 
     if (selectedFile != null) {
@@ -230,21 +232,6 @@ class _CustomImagePickerContainerState
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//
 // import 'dart:developer';
 // import 'dart:io';
 // import 'package:flutter/material.dart';
