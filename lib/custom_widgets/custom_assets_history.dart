@@ -4,6 +4,7 @@ import 'image_grid_preview_widget.dart';
 
 class CustomAssetsHistory extends StatelessWidget {
   final String userName;
+  final String title;
   final String designation;
   final String location;
   final String takeoverDate;
@@ -30,6 +31,7 @@ class CustomAssetsHistory extends StatelessWidget {
     required this.imagesborderRadius,
     required this.imagesContainerLength,
     required this.showIndicators,
+    required this.title,
   });
 
   @override
@@ -79,7 +81,7 @@ class CustomAssetsHistory extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      userName,
+                      title,
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize:
@@ -172,16 +174,16 @@ class CustomAssetsHistory extends StatelessWidget {
           title,
           style: TextStyle(
             fontWeight: FontWeight.w400,
-            fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14,
+            fontSize: Theme.of(context).textTheme.titleMedium?.fontSize ?? 14,
             fontFamily: 'Gilroy-SemiBold',
           ),
         ),
         Text(
           value,
           style: TextStyle(
-            fontWeight: FontWeight.w400,
             fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14,
-            fontFamily: 'Gilroy-SemiBold',
+            fontFamily: 'Gilroy-Regular',
+            fontWeight: FontWeight.w400,
           ),
         ),
       ],

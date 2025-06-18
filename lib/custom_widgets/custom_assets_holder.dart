@@ -8,6 +8,7 @@ class CustomAssetsHolder extends StatefulWidget {
   final String userName;
   final String designation;
   final String location;
+  final String imageTitle;
   final String title;
   final String brand;
   final String serial;
@@ -26,7 +27,7 @@ class CustomAssetsHolder extends StatefulWidget {
     required this.userName,
     required this.designation,
     required this.location,
-    required this.title,
+    required this.imageTitle,
     required this.brand,
     required this.serial,
     required this.handoverDate,
@@ -38,6 +39,7 @@ class CustomAssetsHolder extends StatefulWidget {
     required this.imagesborderRadius,
     required this.imagesContainerLength,
     required this.showIndicators,
+    required this.title,
   });
 
   @override
@@ -90,13 +92,13 @@ class _CustomAssetsHolderState extends State<CustomAssetsHolder> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.userName,
+                      widget.title,
                       style: TextStyle(
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w400,
                         fontSize:
-                            Theme.of(context).textTheme.bodyLarge?.fontSize ??
-                            18,
-                        fontFamily: 'Gilroy',
+                            Theme.of(context).textTheme.titleMedium?.fontSize ??
+                            14,
+                        fontFamily: 'Gilroy-SemiBold',
                       ),
                     ),
                   ],
@@ -145,30 +147,30 @@ class _CustomAssetsHolderState extends State<CustomAssetsHolder> {
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize:
-                            Theme.of(context).textTheme.bodyMedium?.fontSize ??
-                            16,
+                            Theme.of(context).textTheme.titleMedium?.fontSize ??
+                            14,
                         fontFamily: 'Gilroy-SemiBold',
                       ),
                     ),
                     Text(
                       widget.designation,
                       style: TextStyle(
-                        fontWeight: FontWeight.w400,
                         fontSize:
-                            Theme.of(context).textTheme.bodySmall?.fontSize ??
-                            12,
-                        fontFamily: 'Gilroy-Medium',
+                            Theme.of(context).textTheme.bodyMedium?.fontSize ??
+                            14,
+                        fontFamily: 'Gilroy-Regular',
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
 
                     Text(
                       widget.location,
                       style: TextStyle(
-                        fontWeight: FontWeight.w400,
                         fontSize:
-                            Theme.of(context).textTheme.bodySmall?.fontSize ??
-                            12,
-                        fontFamily: 'Gilroy-Medium',
+                            Theme.of(context).textTheme.bodyMedium?.fontSize ??
+                            14,
+                        fontFamily: 'Gilroy-Regular',
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
@@ -186,7 +188,7 @@ class _CustomAssetsHolderState extends State<CustomAssetsHolder> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.title,
+                      widget.imageTitle,
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize:
@@ -207,11 +209,13 @@ class _CustomAssetsHolderState extends State<CustomAssetsHolder> {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 15,
+                  ),
                   child: CustomPaint(
                     size: Size(4, 0),
-                    painter: DotedLine(
-                      dotCount: 15,
+                    painter: DottedLine(
                       dotWidth: 2,
                       dotHeight: 6,
                       spacing: 4,
@@ -226,13 +230,13 @@ class _CustomAssetsHolderState extends State<CustomAssetsHolder> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: getHeight(context) * .02),
-                      _info("Brand", widget.brand),
+                      _info("Brand", widget.brand, context),
                       SizedBox(height: getHeight(context) * .01),
 
-                      _info("Sr . No./MAC/Sim", widget.serial),
+                      _info("Sr . No./MAC/Sim", widget.serial, context),
                       SizedBox(height: getHeight(context) * .01),
 
-                      _info("Handover", widget.handoverDate),
+                      _info("Handover", widget.handoverDate, context),
                       SizedBox(height: getHeight(context) * .01),
                     ],
                   ),
@@ -259,7 +263,7 @@ class _CustomAssetsHolderState extends State<CustomAssetsHolder> {
     );
   }
 
-  Widget _info(String title, String value) {
+  Widget _info(String title, String value, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -269,16 +273,16 @@ class _CustomAssetsHolderState extends State<CustomAssetsHolder> {
           title,
           style: TextStyle(
             fontWeight: FontWeight.w400,
-            fontSize: Theme.of(context).textTheme.bodySmall?.fontSize ?? 14,
+            fontSize: Theme.of(context).textTheme.titleMedium?.fontSize ?? 14,
             fontFamily: 'Gilroy-SemiBold',
           ),
         ),
         Text(
           value,
           style: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: Theme.of(context).textTheme.bodySmall?.fontSize ?? 12,
+            fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14,
             fontFamily: 'Gilroy-Regular',
+            fontWeight: FontWeight.w400,
           ),
         ),
       ],

@@ -89,31 +89,7 @@ class CustomPastAssets extends StatelessWidget {
                   ),
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize:
-                            Theme.of(context).textTheme.bodySmall?.fontSize ??
-                            18,
-                        fontFamily: 'Gilroy-Bold',
-                      ),
-                    ),
-                    Text(
-                      "($code)",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize:
-                            Theme.of(context).textTheme.bodySmall?.fontSize ??
-                            14,
-                        fontFamily: 'Gilroy-Medium',
-                      ),
-                    ),
-                  ],
-                ),
+                child: _info(title, code, context),
               ),
 
               // Inner top shadow (white gradient)
@@ -168,8 +144,8 @@ class CustomPastAssets extends StatelessWidget {
 
                 CustomPaint(
                   size: Size(4, 0),
-                  painter: DotedLine(
-                    dotCount: 13,
+                  painter: DottedLine(
+                    // dotCount: 13,
                     dotWidth: 2,
                     dotHeight: 6,
                     spacing: 4,
@@ -259,16 +235,16 @@ Widget _info(String title, String value, BuildContext context) {
         title,
         style: TextStyle(
           fontWeight: FontWeight.w400,
-          fontSize: Theme.of(context).textTheme.bodySmall?.fontSize ?? 14,
+          fontSize: Theme.of(context).textTheme.titleMedium?.fontSize ?? 14,
           fontFamily: 'Gilroy-SemiBold',
         ),
       ),
       Text(
         value,
         style: TextStyle(
-          fontWeight: FontWeight.w400,
-          fontSize: Theme.of(context).textTheme.bodySmall?.fontSize ?? 14,
+          fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14,
           fontFamily: 'Gilroy-Regular',
+          fontWeight: FontWeight.w400,
         ),
       ),
     ],

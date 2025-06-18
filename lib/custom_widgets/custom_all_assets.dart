@@ -37,12 +37,11 @@ class CustomAllAssets extends StatelessWidget {
     final r = getResponsive(context);
     final rt = getResponsiveText(context);
     final h = getHeight(context);
-    // final w = getWidth(context);
 
     return Container(
       margin: EdgeInsets.all(r * 12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(r * 13),
+        borderRadius: BorderRadius.circular(r * 15),
         border: Border.all(color: AppColors.borderColor, width: r * 1.5),
         color: Colors.white,
         boxShadow: [
@@ -82,49 +81,25 @@ class CustomAllAssets extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize:
-                                  Theme.of(
-                                    context,
-                                  ).textTheme.bodyLarge?.fontSize ??
-                                  14,
-                              fontFamily: 'Gilroy-SemiBold',
-                            ),
-                          ),
-                          Text(
-                            "($code)",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize:
-                                  Theme.of(
-                                    context,
-                                  ).textTheme.bodyMedium?.fontSize ??
-                                  14,
-                              fontFamily: 'Gilroy-SemiBold',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    Expanded(child: _info(title, code, context)),
                     Row(
                       children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit, color: Colors.white),
-                          onPressed: onEdit,
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.qr_code_2,
-                            color: Colors.white,
+                        GestureDetector(
+                          child: Image.asset(
+                            height: 30,
+                            width: 30,
+                            "assets/message-edit.png",
+                            fit: BoxFit.fill,
                           ),
-                          onPressed: onQRCode,
+                        ),
+                        SizedBox(width: 20),
+                        GestureDetector(
+                          child: Image.asset(
+                            height: 30,
+                            width: 30,
+                            "assets/scan.png",
+                            fit: BoxFit.fill,
+                          ),
                         ),
                       ],
                     ),
@@ -177,15 +152,17 @@ class CustomAllAssets extends StatelessWidget {
 
                 const SizedBox(width: 10),
 
-                CustomPaint(
-                  size: Size(4, 0),
-                  painter: DotedLine(
-                    dotCount: 13,
-                    dotWidth: 2,
-                    dotHeight: 6,
-                    spacing: 4,
-                    color: AppColors.primary,
-                    vertical: true,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: CustomPaint(
+                    size: Size(4, 0),
+                    painter: DottedLine(
+                      dotWidth: 2,
+                      dotHeight: 6,
+                      spacing: 4,
+                      color: AppColors.primary,
+                      vertical: true,
+                    ),
                   ),
                 ),
 
@@ -227,13 +204,14 @@ class CustomAllAssets extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(child: _info("Handover", handover, context)),
+                MyCoButton(
+                  height: 40,
+                  width: 150,
 
-                Expanded(
-                  child: MyCoButton(
-                    onTap: () {},
-                    title: "View More",
-                    boarderRadius: 100,
-                  ),
+                  isShadowBottomLeft: true,
+                  onTap: () {},
+                  title: "View More",
+                  boarderRadius: 100,
                 ),
                 // CustomShadowButton(
                 //   text: 'View Details',
@@ -258,7 +236,7 @@ class CustomAllAssets extends StatelessWidget {
           title,
           style: TextStyle(
             fontWeight: FontWeight.w400,
-            fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14,
+            fontSize: Theme.of(context).textTheme.titleMedium?.fontSize ?? 14,
             fontFamily: 'Gilroy-SemiBold',
           ),
         ),

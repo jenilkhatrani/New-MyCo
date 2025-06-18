@@ -67,31 +67,7 @@ class CustomActiveAssets extends StatelessWidget {
                   horizontal: 16,
                   vertical: 12,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize:
-                            Theme.of(context).textTheme.bodyLarge?.fontSize ??
-                            14,
-                        fontFamily: 'Gilroy-',
-                      ),
-                    ),
-                    Text(
-                      "($code)",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize:
-                            Theme.of(context).textTheme.bodyMedium?.fontSize ??
-                            14,
-                        fontFamily: 'Gilroy-SemiBold',
-                      ),
-                    ),
-                  ],
-                ),
+                child: _info(title, code, context),
               ),
 
               // Inner top shadow (white gradient)
@@ -143,8 +119,7 @@ class CustomActiveAssets extends StatelessWidget {
 
                 CustomPaint(
                   size: Size(4, 0),
-                  painter: DotedLine(
-                    dotCount: 16,
+                  painter: DottedLine(
                     dotWidth: 2,
                     dotHeight: 6,
                     spacing: 4,
@@ -186,16 +161,16 @@ class CustomActiveAssets extends StatelessWidget {
           title,
           style: TextStyle(
             fontWeight: FontWeight.w400,
-            fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14,
+            fontSize: Theme.of(context).textTheme.titleMedium?.fontSize ?? 14,
             fontFamily: 'Gilroy-SemiBold',
           ),
         ),
         Text(
           value,
           style: TextStyle(
-            fontWeight: FontWeight.w400,
             fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize ?? 14,
-            fontFamily: 'Gilroy-SemiBold',
+            fontFamily: 'Gilroy-Regular',
+            fontWeight: FontWeight.w400,
           ),
         ),
       ],
