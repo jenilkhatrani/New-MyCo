@@ -3,16 +3,19 @@
 // import 'package:flutter/material.dart';
 // import 'package:image_picker/image_picker.dart';
 // import 'package:path/path.dart' as path;
-// import '../themes_colors/app_theme.dart';
-// import '../themes_colors/colors.dart';
-// import 'new_myco_button.dart';
+// import '../../themes_colors/app_theme.dart';
+// import '../../themes_colors/colors.dart';
+// import '../../utils/helper/permission_helper.dart';
+// import '../new_myco_button.dart';
 // import 'package:new_myco/custom_widgets/custome_shadow_container.dart';
-// import '../utils/helper/permission_helper.dart';
 //
 // Future<File?> showImageFilePicker({
 //   required BuildContext context,
 //   bool? isDialog,
 //   bool? selectDocument,
+//   bool isCameraShow = false,
+//   bool isGallaryShow = false,
+//   bool isDocumentShow = false,
 // }) async {
 //   return isDialog == true
 //       ? showDialog<File>(
@@ -36,6 +39,7 @@
 //
 // class _ImageFilePickerWidget extends StatefulWidget {
 //   final bool? selectDocument;
+//
 //   const _ImageFilePickerWidget({this.selectDocument});
 //
 //   @override
@@ -54,7 +58,6 @@
 //       ),
 //       child: Column(
 //         mainAxisSize: MainAxisSize.min,
-//         crossAxisAlignment: CrossAxisAlignment.center,
 //         children: [
 //           Padding(
 //             padding: const EdgeInsets.all(8.0),
@@ -71,46 +74,49 @@
 //             padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20),
 //             child: Row(
 //               children: [
-//                 GestureDetector(
+//                 _pickerButton(
+//                   icon: 'assets/camera.png',
+//                   title: 'Camera',
 //                   onTap: () async {
-//                     if (await PermissionsHelper.checkCameraPermission(
-//                       context,
-//                     )) {
+//                     final hasPermission =
+//                         await PermissionUtil.checkPermissionByPickerType(
+//                           'camera',
+//                           context,
+//                         );
+//                     if (hasPermission) {
 //                       _pickImage(ImageSource.camera);
 //                     }
 //                   },
-//                   child: CustomShadowContainer(
-//                     image: Image.asset('assets/camera.png'),
-//                     title: 'Camera',
-//                   ),
 //                 ),
 //                 const SizedBox(width: 10),
-//                 GestureDetector(
+//                 _pickerButton(
+//                   icon: 'assets/gallery-add.png',
+//                   title: 'Gallery',
 //                   onTap: () async {
-//                     if (await PermissionsHelper.checkGalleryPermission(
-//                       context,
-//                     )) {
+//                     final hasPermission =
+//                         await PermissionUtil.checkPermissionByPickerType(
+//                           'gallery',
+//                           context,
+//                         );
+//                     if (hasPermission) {
 //                       _pickImage(ImageSource.gallery);
 //                     }
 //                   },
-//                   child: CustomShadowContainer(
-//                     image: Image.asset('assets/gallery-add.png'),
-//                     title: 'Gallery',
-//                   ),
 //                 ),
 //                 const SizedBox(width: 10),
-//                 GestureDetector(
+//                 _pickerButton(
+//                   icon: 'assets/document.png',
+//                   title: 'Documents',
 //                   onTap: () async {
-//                     if (await PermissionsHelper.checkStoragePermission(
-//                       context,
-//                     )) {
+//                     final hasPermission =
+//                         await PermissionUtil.checkPermissionByPickerType(
+//                           'document',
+//                           context,
+//                         );
+//                     if (hasPermission) {
 //                       _pickDocument();
 //                     }
 //                   },
-//                   child: CustomShadowContainer(
-//                     image: Image.asset('assets/document.png'),
-//                     title: 'Documents',
-//                   ),
 //                 ),
 //               ],
 //             ),
@@ -119,9 +125,7 @@
 //             padding: const EdgeInsets.symmetric(horizontal: 20.0),
 //             child: MyCoButton(
 //               isShadowBottomLeft: true,
-//               onTap: () {
-//                 Navigator.pop(context);
-//               },
+//               onTap: () => Navigator.pop(context),
 //               boarderRadius: 50,
 //               title: 'Cancel',
 //             ),
@@ -129,6 +133,17 @@
 //           const SizedBox(height: 16),
 //         ],
 //       ),
+//     );
+//   }
+//
+//   Widget _pickerButton({
+//     required String icon,
+//     required String title,
+//     required VoidCallback onTap,
+//   }) {
+//     return GestureDetector(
+//       onTap: onTap,
+//       child: CustomShadowContainer(image: Image.asset(icon), title: title),
 //     );
 //   }
 //
@@ -142,24 +157,18 @@
 //       );
 //
 //       if (pickedFile != null) {
-//         final String extension = path.extension(pickedFile.path).toLowerCase();
-//
+//         final extension = path.extension(pickedFile.path).toLowerCase();
 //         if ([".png", ".jpg", ".jpeg", ".heic"].contains(extension)) {
-//           final File imageFile = File(pickedFile.path);
-//           if (mounted) Navigator.pop(context, imageFile);
+//           final file = File(pickedFile.path);
+//           if (mounted) Navigator.pop(context, file);
 //         } else {
-//           ScaffoldMessenger.of(context).showSnackBar(
-//             const SnackBar(
-//               content: Text("Invalid file type. Use PNG, JPG, or JPEG."),
-//             ),
-//           );
+//           _showError("Invalid file type. Use PNG, JPG, or JPEG.");
 //         }
 //       } else {
 //         Navigator.pop(context);
 //       }
 //     } catch (e) {
-//       print("Error picking image: $e");
-//       if (mounted) Navigator.pop(context);
+//       _showError("Error picking image: $e");
 //     }
 //   }
 //
@@ -167,19 +176,25 @@
 //     try {
 //       final result = await FilePicker.platform.pickFiles(
 //         type: FileType.custom,
-//         allowedExtensions: ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'heic', 'png'],
+//         allowedExtensions: ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'],
 //       );
 //
 //       if (result != null && result.files.single.path != null) {
-//         final File file = File(result.files.single.path!);
+//         final file = File(result.files.single.path!);
 //         if (mounted) Navigator.pop(context, file);
 //       } else {
 //         Navigator.pop(context);
 //       }
 //     } catch (e) {
-//       print("Error picking document: $e");
-//       if (mounted) Navigator.pop(context);
+//       _showError("Error picking document: $e");
 //     }
+//   }
+//
+//   void _showError(String message) {
+//     ScaffoldMessenger.of(
+//       context,
+//     ).showSnackBar(SnackBar(content: Text(message)));
+//     if (mounted) Navigator.pop(context);
 //   }
 // }
 import 'dart:io';
@@ -187,16 +202,20 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
-import '../themes_colors/app_theme.dart';
-import '../themes_colors/colors.dart';
-import '../utils/helper/permission_helper.dart';
-import 'new_myco_button.dart';
+import '../../themes_colors/app_theme.dart';
+import '../../themes_colors/colors.dart';
+import '../../utils/helper/permission_helper.dart';
+import '../custom_loader/custom_loader.dart';
+import '../new_myco_button.dart';
 import 'package:new_myco/custom_widgets/custome_shadow_container.dart';
 
 Future<File?> showImageFilePicker({
   required BuildContext context,
   bool? isDialog,
   bool? selectDocument,
+  bool isCameraShow = false,
+  bool isGallaryShow = false,
+  bool isDocumentShow = false,
 }) async {
   return isDialog == true
       ? showDialog<File>(
@@ -220,6 +239,7 @@ Future<File?> showImageFilePicker({
 
 class _ImageFilePickerWidget extends StatefulWidget {
   final bool? selectDocument;
+
   const _ImageFilePickerWidget({this.selectDocument});
 
   @override
@@ -228,9 +248,16 @@ class _ImageFilePickerWidget extends StatefulWidget {
 
 class _ImageFilePickerWidgetState extends State<_ImageFilePickerWidget> {
   final ImagePicker _picker = ImagePicker();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    return Stack(
+      children: [_mainPickerUI(), if (_isLoading) const CustomLoader()],
+    );
+  }
+
+  Widget _mainPickerUI() {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -258,9 +285,12 @@ class _ImageFilePickerWidgetState extends State<_ImageFilePickerWidget> {
                   icon: 'assets/camera.png',
                   title: 'Camera',
                   onTap: () async {
-                    if (await PermissionsHelper.checkCameraPermission(
-                      context,
-                    )) {
+                    final hasPermission =
+                        await PermissionUtil.checkPermissionByPickerType(
+                          'camera',
+                          context,
+                        );
+                    if (hasPermission) {
                       _pickImage(ImageSource.camera);
                     }
                   },
@@ -270,9 +300,12 @@ class _ImageFilePickerWidgetState extends State<_ImageFilePickerWidget> {
                   icon: 'assets/gallery-add.png',
                   title: 'Gallery',
                   onTap: () async {
-                    if (await PermissionsHelper.checkGalleryPermission(
-                      context,
-                    )) {
+                    final hasPermission =
+                        await PermissionUtil.checkPermissionByPickerType(
+                          'gallery',
+                          context,
+                        );
+                    if (hasPermission) {
                       _pickImage(ImageSource.gallery);
                     }
                   },
@@ -282,9 +315,12 @@ class _ImageFilePickerWidgetState extends State<_ImageFilePickerWidget> {
                   icon: 'assets/document.png',
                   title: 'Documents',
                   onTap: () async {
-                    if (await PermissionsHelper.checkStoragePermission(
-                      context,
-                    )) {
+                    final hasPermission =
+                        await PermissionUtil.checkPermissionByPickerType(
+                          'document',
+                          context,
+                        );
+                    if (hasPermission) {
                       _pickDocument();
                     }
                   },
@@ -319,6 +355,7 @@ class _ImageFilePickerWidgetState extends State<_ImageFilePickerWidget> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
+    setState(() => _isLoading = true);
     try {
       final XFile? pickedFile = await _picker.pickImage(
         source: source,
@@ -340,10 +377,13 @@ class _ImageFilePickerWidgetState extends State<_ImageFilePickerWidget> {
       }
     } catch (e) {
       _showError("Error picking image: $e");
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   Future<void> _pickDocument() async {
+    setState(() => _isLoading = true);
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -358,6 +398,8 @@ class _ImageFilePickerWidgetState extends State<_ImageFilePickerWidget> {
       }
     } catch (e) {
       _showError("Error picking document: $e");
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 

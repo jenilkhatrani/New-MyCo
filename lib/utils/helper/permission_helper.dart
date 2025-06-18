@@ -1,217 +1,201 @@
-// import 'dart:io';
-// import 'package:flutter/material.dart';
-// import 'package:permission_handler/permission_handler.dart';
-//
-// class PermissionsHelper {
-//   /// Check and request camera permission
-//   static Future<bool> checkCameraPermission(BuildContext context) async {
-//     final status = await Permission.camera.status;
-//     if (status.isGranted) return true;
-//
-//     final result = await Permission.camera.request();
-//     return _handlePermissionResult(context, result);
-//   }
-//
-//   /// Check and request photo + video access
-//   static Future<bool> checkGalleryPermission(BuildContext context) async {
-//     if (Platform.isAndroid) {
-//       final photos = await Permission.photos.status;
-//       final videos = await Permission.videos.status;
-//
-//       if (photos.isGranted && videos.isGranted) return true;
-//
-//       final photosResult = await Permission.photos.request();
-//       final videosResult = await Permission.videos.request();
-//
-//       return _handlePermissionResult(context, photosResult) &&
-//           _handlePermissionResult(context, videosResult);
-//     } else {
-//       final status = await Permission.photos.status;
-//       if (status.isGranted) return true;
-//
-//       final result = await Permission.photos.request();
-//       return _handlePermissionResult(context, result);
-//     }
-//   }
-//
-//   /// Check and request document/storage permission
-//   static Future<bool> checkStoragePermission(BuildContext context) async {
-//     if (Platform.isAndroid) {
-//       final result = await Permission.manageExternalStorage.request();
-//       return _handlePermissionResult(context, result);
-//     } else {
-//       final result = await Permission.photos.request();
-//       return _handlePermissionResult(context, result);
-//     }
-//   }
-//
-//   static bool _handlePermissionResult(
-//     BuildContext context,
-//     PermissionStatus status,
-//   ) {
-//     if (status.isGranted) {
-//       return true;
-//     } else if (status.isPermanentlyDenied) {
-//       _showPermanentDeniedDialog(context);
-//     } else {
-//       _showPermissionDeniedSnackBar(context);
-//     }
-//     return false;
-//   }
-//
-//   static void _showPermissionDeniedSnackBar(BuildContext context) {
-//     ScaffoldMessenger.of(context).showSnackBar(
-//       SnackBar(
-//         content: const Text("Permission denied. Please enable it in settings."),
-//         action: SnackBarAction(
-//           label: "Go to Settings",
-//           onPressed: () => openAppSettings(),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   static void _showPermanentDeniedDialog(BuildContext context) {
-//     showDialog(
-//       context: context,
-//       builder: (_) => AlertDialog(
-//         title: const Text("Permission Permanently Denied"),
-//         content: const Text(
-//           "You've permanently denied this permission. Please go to settings to enable it.",
-//         // ),
-//         actions: [
-//           TextButton(
-//             onPressed: () => Navigator.of(context).pop(),
-//             child: const Text("Cancel"),
-//           ),
-//           ElevatedButton(
-//             onPressed: () {
-//               openAppSettings();
-//               Navigator.of(context).pop();
-//             },
-//             child: const Text("Open Settings"),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:device_info_plus/device_info_plus.dart';
+import 'dart:io';
 
-class PermissionsHelper {
-  /// Check and request camera permission
-  static Future<bool> checkCameraPermission(BuildContext context) async {
-    final status = await Permission.camera.status;
-    if (status.isGranted) return true;
+import '../../themes_colors/colors.dart';
 
-    final result = await Permission.camera.request();
-    return _handleStatus(context, result);
-  }
+enum AppPermission {
+  camera,
+  storage,
+  photos,
+  mediaLibrary,
+  microphone,
+  location,
+  notification,
+  manageExternalStorage,
+}
 
-  /// Check and request gallery (photos + videos) access
-  static Future<bool> checkGalleryPermission(BuildContext context) async {
+class PermissionUtil {
+  static const MethodChannel _channel = MethodChannel(
+    'custom.permission/channel',
+  );
+
+  static Future<int> getAndroidSdkInt() async {
     if (Platform.isAndroid) {
-      final sdkInt = (await _getSdkInt());
-      if (sdkInt >= 33) {
-        final photoStatus = await Permission.photos.status;
-        final videoStatus = await Permission.videos.status;
-
-        if (photoStatus.isGranted && videoStatus.isGranted) return true;
-
-        final photoResult = await Permission.photos.request();
-        final videoResult = await Permission.videos.request();
-
-        return _handleStatus(context, photoResult) &&
-            _handleStatus(context, videoResult);
-      } else {
-        final result = await Permission.storage.request();
-        return _handleStatus(context, result);
+      try {
+        final int sdkInt = await _channel.invokeMethod('getAndroidSdkInt');
+        return sdkInt;
+      } catch (e) {
+        return 0;
       }
-    } else {
-      final result = await Permission.photos.request();
-      return _handleStatus(context, result);
     }
+    return 0;
   }
 
-  /// Check and request file/document storage permission
-  static Future<bool> checkStoragePermission(BuildContext context) async {
-    if (Platform.isAndroid) {
-      final sdkInt = await _getSdkInt();
-      if (sdkInt >= 30) {
-        final manageResult = await Permission.manageExternalStorage.request();
-        return _handleStatus(context, manageResult);
-      } else {
-        final result = await Permission.storage.request();
-        return _handleStatus(context, result);
-      }
-    } else {
-      final result = await Permission.photos.request();
-      return _handleStatus(context, result);
+  /// Request a single permission
+  static Future<bool> requestPermission(AppPermission permission) async {
+    final status = await _getPermission(permission).request();
+    return status.isGranted;
+  }
+
+  /// Check if a single permission is granted
+  static Future<bool> isPermissionGranted(AppPermission permission) async {
+    final status = await _getPermission(permission).status;
+    return status.isGranted;
+  }
+
+  /// Request multiple permissions
+  static Future<Map<AppPermission, bool>> requestMultiplePermissions(
+    List<AppPermission> permissions,
+  ) async {
+    Map<AppPermission, bool> results = {};
+
+    for (AppPermission permission in permissions) {
+      final status = await _getPermission(permission).request();
+      results[permission] = status.isGranted;
     }
+
+    return results;
   }
 
-  /// Handles the result and opens settings if denied permanently
-  static bool _handleStatus(BuildContext context, PermissionStatus status) {
-    if (status.isGranted) return true;
-
-    if (status.isPermanentlyDenied) {
-      _showPermanentDialog(context);
-    } else {
-      _showDeniedSnackbar(context);
-    }
-    return false;
+  /// Open app settings
+  static Future<bool> openAppSettingsPage() async {
+    return await openAppSettings();
   }
 
-  static void _showDeniedSnackbar(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text(
-          'Permission denied. Please allow it from settings.',
-        ),
-        action: SnackBarAction(
-          label: 'Go to Settings',
-          onPressed: () => openAppSettings(),
-        ),
-      ),
-    );
-  }
-
-  static void _showPermanentDialog(BuildContext context) {
+  /// Show dialog when permission is denied
+  static void showPermissionDeniedDialog(
+    BuildContext context, {
+    String message = 'Permission denied to access media.',
+  }) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Permission Denied'),
-        content: const Text(
-          'You have permanently denied this permission. Please enable it in app settings.',
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
+        contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        title: Row(
+          children: [
+            const Icon(
+              Icons.warning_amber_rounded,
+              color: AppColors.GPSMediumColor,
+              size: 28,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              'Permission Needed',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: AppColors.subTitleColor,
+              ),
+            ),
+          ],
         ),
+        content: Text(
+          message,
+          style: TextStyle(fontSize: 16, color: AppColors.titleColor),
+        ),
+        actionsPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
+        actionsAlignment: MainAxisAlignment.end,
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(
+                color: AppColors.borderColor,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
-          ElevatedButton(
+          ElevatedButton.icon(
             onPressed: () {
-              openAppSettings();
               Navigator.of(context).pop();
+              openAppSettingsPage();
             },
-            child: const Text('Open Settings'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              elevation: 2,
+            ),
+            icon: const Icon(Icons.settings, size: 20),
+            label: const Text(
+              'Open Settings',
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            ),
           ),
         ],
       ),
     );
   }
 
-  /// Utility to get Android SDK version
-  static Future<int> _getSdkInt() async {
-    try {
-      final info = await DeviceInfoPlugin().androidInfo;
-      return info.version.sdkInt;
-    } catch (_) {
-      return 33; // fallback to highest for safety
+  /// Map enum to real platform permission
+  static Permission _getPermission(AppPermission permission) {
+    switch (permission) {
+      case AppPermission.camera:
+        return Permission.camera;
+      case AppPermission.storage:
+        return Platform.isIOS ? Permission.photos : Permission.storage;
+      case AppPermission.photos:
+        return Permission.photos;
+      case AppPermission.mediaLibrary:
+        return Permission.mediaLibrary;
+      case AppPermission.microphone:
+        return Permission.microphone;
+      case AppPermission.location:
+        return Permission.location;
+      case AppPermission.notification:
+        return Permission.notification;
+      case AppPermission.manageExternalStorage:
+        return Permission.manageExternalStorage;
+      default:
+        return Permission.unknown;
     }
+  }
+
+  static Future<bool> checkPermissionByPickerType(
+    String type,
+    BuildContext context,
+  ) async {
+    bool granted = false;
+
+    if (type == 'camera') {
+      granted = await PermissionUtil.requestPermission(AppPermission.camera);
+    } else if (type == 'gallery') {
+      int sdkInt = await PermissionUtil.getAndroidSdkInt();
+
+      if (Platform.isAndroid && sdkInt < 33) {
+        // Android 12 (API 32) and below
+        granted = await PermissionUtil.requestPermission(AppPermission.storage);
+      } else {
+        // Android 13+ (API 33+)
+        granted = await PermissionUtil.requestPermission(AppPermission.photos);
+      }
+    } else if (type == 'document') {
+      if (Platform.isAndroid) {
+        granted = await PermissionUtil.requestPermission(
+          AppPermission.manageExternalStorage,
+        );
+      } else {
+        granted = true;
+      }
+    }
+
+    if (!granted && context.mounted) {
+      PermissionUtil.showPermissionDeniedDialog(context);
+    }
+
+    return granted;
   }
 }
