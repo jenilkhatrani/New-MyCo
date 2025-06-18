@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../custom_widgets/bottomsheet_otp.dart';
-import '../custom_widgets/bottomsheet_radio_btn.dart';
+// import '../custom_widgets/bottomsheet_otp.dart';
+// import '../custom_widgets/bottomsheet_radio_btn.dart';
+import '../custom_media_picker/custom_media_picker_container.dart';
 import '../custom_widgets/custom_pi_chart.dart';
 // import '../custom_widgets/out_of_range_travel_mode_bottom_sheet.dart';
 // import '../custom_widgets/custom_active_assets.dart';
@@ -8,11 +9,12 @@ import '../custom_widgets/custom_pi_chart.dart';
 // import '../custom_widgets/custom_assets_history.dart';
 // import '../custom_widgets/custom_assets_holder.dart';
 // import '../custom_widgets/custom_calender.dart';
-import '../custom_widgets/custom_image_picker_container/custom_image_picker_containe.dart';
-import '../custom_widgets/custom_past_assets.dart';
-import '../custom_widgets/custom_tabbar.dart';
-import '../custom_widgets/image_grid_preview_widget.dart';
-import '../main.dart';
+// import '../custom_widgets/custom_image_picker_container/custom_image_picker_containe.dart';
+// import '../custom_widgets/custom_past_assets.dart';
+// import '../custom_widgets/custom_tabbar.dart';
+// import '../custom_widgets/image_grid_preview_widget.dart';
+// import '../main.dart';
+import '../custom_widgets/custom_slider.dart';
 import '../themes_colors/colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,24 +25,166 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<ChartSegment> segments = [
-    ChartSegment(label: 'Sandwich', value: 2, color: Color(0xFFF6E7B3)),
-    ChartSegment(label: 'Sandwich', value: 2, color: Color(0xFFBFD978)),
-    ChartSegment(label: 'Paid', value: 4, color: Color(0xFFBEE9E2)),
-    ChartSegment(label: 'Unpaid', value: 5, color: Color(0xFFAAB3C1)),
-    ChartSegment(label: 'Week Off', value: 2, color: Color(0xFFFFDCF5)),
-    ChartSegment(label: 'Week Off', value: 2, color: Color(0xFFCCEAF2)),
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
+      backgroundColor: AppColors.white,
       appBar: AppBar(title: Text("MyCo Components")),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomMediaPickerContainer(
+                  title: "Assets Image",
+                  imageTitle: "Capture Image",
+                  multipleImage: 5,
+                  imagePath: "assets/gallery-export.png",
+                  backgroundColor: Colors.blue.shade50,
+                  isCameraShow: true,
+                  isGallaryShow: true,
+                  isDocumentShow: true,
+                  // containerHeight: 200,
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "No indicator with auto slider and carosual slider",
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomSlider(
+                  imagePaths: [
+                    "https://static.vecteezy.com/system/resources/thumbnails/048/162/647/small_2x/two-snow-covered-trees-in-a-white-landscape-photo.jpg",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8IxE78frqZkL71tLAjJqwtAK_udZkqfHv2Q&s",
+                    "https://static.vecteezy.com/system/resources/thumbnails/024/703/613/small/amazing-still-reflections-at-lake-surrounded-by-mountains-created-with-generative-ai-photo.jpg",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHeCXBXlxKN4BO9ezT6nHiIv2E2A-DGyg_DesSRMivFNaAsdtTRdOOxa6BzCxKbTAByPE&usqp=CAU",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTu9pPTi6sJYwiM_MHafuDFQczkTQJABENfg&s",
+                  ],
+                  isCarousel: true,
+                  showBottomShadow: true,
+                  showIndicator: false,
+                  height: 200,
+                  width: double.infinity,
+                  switchDuration: const Duration(
+                    seconds: 3,
+                  ), // ⏳ Time between slides
+                  animationDuration: const Duration(
+                    milliseconds: 1000,
+                  ), // 🎞 Slide speed
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Indicators with carosuel slider",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomSlider(
+                  imagePaths: [
+                    "https://static.vecteezy.com/system/resources/thumbnails/048/162/647/small_2x/two-snow-covered-trees-in-a-white-landscape-photo.jpg",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8IxE78frqZkL71tLAjJqwtAK_udZkqfHv2Q&s",
+                    "https://static.vecteezy.com/system/resources/thumbnails/024/703/613/small/amazing-still-reflections-at-lake-surrounded-by-mountains-created-with-generative-ai-photo.jpg",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHeCXBXlxKN4BO9ezT6nHiIv2E2A-DGyg_DesSRMivFNaAsdtTRdOOxa6BzCxKbTAByPE&usqp=CAU",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTu9pPTi6sJYwiM_MHafuDFQczkTQJABENfg&s",
+                  ],
+                  isCarousel: true,
+                  showBottomShadow: false,
+                  showIndicator: true,
+                  height: 200,
+                  width: double.infinity,
+                  switchDuration: const Duration(
+                    seconds: 3,
+                  ), // ⏳ Time between slides
+                  animationDuration: const Duration(
+                    milliseconds: 1000,
+                  ), // 🎞 Slide speed
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Carosuel False with indicators and timer",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomSlider(
+                  imagePaths: [
+                    "https://static.vecteezy.com/system/resources/thumbnails/048/162/647/small_2x/two-snow-covered-trees-in-a-white-landscape-photo.jpg",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8IxE78frqZkL71tLAjJqwtAK_udZkqfHv2Q&s",
+                    "https://static.vecteezy.com/system/resources/thumbnails/024/703/613/small/amazing-still-reflections-at-lake-surrounded-by-mountains-created-with-generative-ai-photo.jpg",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHeCXBXlxKN4BO9ezT6nHiIv2E2A-DGyg_DesSRMivFNaAsdtTRdOOxa6BzCxKbTAByPE&usqp=CAU",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTu9pPTi6sJYwiM_MHafuDFQczkTQJABENfg&s",
+                  ],
+                  isCarousel: false,
+                  showBottomShadow: false,
+                  showIndicator: true,
+                  height: 220,
+                  width: double.infinity,
+                  switchDuration: const Duration(
+                    seconds: 3,
+                  ), // ⏳ Time between slides
+                  animationDuration: const Duration(
+                    milliseconds: 1000,
+                  ), //🎞 Slide speed
+                ),
+              ),
+
+              // SizedBox(
+              //   width: double.infinity,
+              //   height: 300,
+              //   child: CustomPaint(
+              //     painter: DonutChartPainter(
+              //       innerRadius: 70,
+              //       segmentWidth: 30,
+              //       const [
+              //         ChartSegment(
+              //           label: 'Sandwich',
+              //           value: 8,
+              //           color: Colors.orange,
+              //         ),
+              //         ChartSegment(
+              //           label: 'Paid',
+              //           value: 8,
+              //           color: Colors.green,
+              //         ),
+              //         ChartSegment(
+              //           label: 'Paid',
+              //           value: 8,
+              //           color: Colors.purple,
+              //         ),
+              //         ChartSegment(
+              //           label: 'Unpaid',
+              //           value: 8,
+              //           color: Colors.cyan,
+              //         ),
+              //         ChartSegment(
+              //           label: 'Unpaid',
+              //           value: 8,
+              //           color: Colors.pink,
+              //         ),
+              //         ChartSegment(
+              //           label: 'Week Off',
+              //           value: 8,
+              //           color: Colors.blue,
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               // Padding(
               //   padding: EdgeInsets.all(20),
               //   child: CustomImagePickerContainer(),
@@ -62,48 +206,9 @@ class _HomePageState extends State<HomePage> {
               //     tabBarBorderColor: AppColors.primary,
               //   ),
               // ),
-              SizedBox(height: 50),
+              // SizedBox(height: 50),
 
-              Center(
-                child: Container(
-                  // height: 600,
-                  // width: 600,
-                  child: DonutChartWithLabels(
-                    segments: [
-                      ChartSegment(
-                        label: 'Sandwich',
-                        value: 2,
-                        color: Color(0xFFFFF1C4),
-                      ),
-                      ChartSegment(
-                        label: 'Sandwich',
-                        value: 2,
-                        color: Color(0xFFDFF3C3),
-                      ),
-                      ChartSegment(
-                        label: 'Paid',
-                        value: 4,
-                        color: Color(0xFFE6F6F5),
-                      ),
-                      ChartSegment(
-                        label: 'Week Off',
-                        value: 2,
-                        color: Color(0xFFD6F3F9),
-                      ),
-                      ChartSegment(
-                        label: 'Week Off',
-                        value: 2,
-                        color: Color(0xFFFBE9F5),
-                      ),
-                      ChartSegment(
-                        label: 'Unpaid',
-                        value: 5,
-                        color: Color(0xFFE2EAF0),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // Center(
               // Padding(
               //   padding: const EdgeInsets.all(8.0),
               //   child: ImageGridPreviewWidget(
