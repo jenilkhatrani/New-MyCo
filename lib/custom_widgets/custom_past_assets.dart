@@ -143,13 +143,11 @@ class CustomPastAssets extends StatelessWidget {
                 const SizedBox(width: 10),
 
                 CustomPaint(
-                  size: Size(4, 0),
                   painter: DottedLine(
-                    // dotCount: 13,
-                    dotWidth: 2,
-                    dotHeight: 6,
-                    spacing: 4,
-                    color: AppColors.primary,
+                    dotWidth: 4,
+                    dotHeight: 4,
+                    spacing: 6,
+                    color: Colors.black,
                     vertical: true,
                   ),
                 ),

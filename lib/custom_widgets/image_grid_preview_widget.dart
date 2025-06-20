@@ -66,7 +66,7 @@ class ImageGridPreviewWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => _ImagePreview(
+            builder: (_) => ImagePreview(
               containersLength: containersLength,
               images: images,
               startIndex: index,
@@ -117,13 +117,13 @@ class ImageGridPreviewWidget extends StatelessWidget {
   }
 }
 
-class _ImagePreview extends StatefulWidget {
+class ImagePreview extends StatefulWidget {
   final List<String> images;
   final int? containersLength;
   final int startIndex;
   final bool showIndicators;
 
-  const _ImagePreview({
+  const ImagePreview({
     required this.images,
     required this.startIndex,
     this.showIndicators = true,
@@ -131,10 +131,10 @@ class _ImagePreview extends StatefulWidget {
   });
 
   @override
-  State<_ImagePreview> createState() => _ImagePreviewState();
+  State<ImagePreview> createState() => _ImagePreviewState();
 }
 
-class _ImagePreviewState extends State<_ImagePreview> {
+class _ImagePreviewState extends State<ImagePreview> {
   late final PageController _controller;
   late int _currentIndex;
 

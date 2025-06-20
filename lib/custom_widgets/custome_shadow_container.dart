@@ -10,6 +10,7 @@ class CustomShadowContainer extends StatelessWidget {
   final double? width;
   final double? containerHeight;
   final double? borderRadius;
+
   const CustomShadowContainer({
     required this.image,
     required this.title,

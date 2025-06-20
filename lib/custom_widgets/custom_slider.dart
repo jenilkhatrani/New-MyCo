@@ -3,31 +3,40 @@ import 'package:flutter/material.dart';
 
 class CustomSlider extends StatefulWidget {
   final List<String> imagePaths;
-  final bool isCarousel; // true = allow manual swipe
+  final bool isCarousel;
   final bool showBottomShadow;
   final bool showIndicator;
+  final bool isPreviewEnabled;
+  final bool isButton;
   final double? height;
   final double? width;
-  final Duration switchDuration; // Delay between auto slides
-  final Duration animationDuration; // Animation duration per slide
+  final Duration switchDuration;
+  final Duration animationDuration;
+  final Color? activeIndicatorColor;
+  final Color? inactiveIndicatorColor;
 
   const CustomSlider({
-    Key? key,
+    super.key,
     required this.imagePaths,
     this.isCarousel = false,
     this.showBottomShadow = false,
     this.showIndicator = true,
     this.height = 200,
     this.width = double.infinity,
-    this.switchDuration = const Duration(seconds: 4),
+    this.switchDuration = const Duration(seconds: 3),
     this.animationDuration = const Duration(milliseconds: 500),
-  }) : super(key: key);
+    this.activeIndicatorColor,
+    this.inactiveIndicatorColor,
+    this.isPreviewEnabled = false,
+    this.isButton = true,
+  });
 
   @override
   State<CustomSlider> createState() => _CustomSliderState();
 }
 
-class _CustomSliderState extends State<CustomSlider> {
+class _CustomSliderState extends State<CustomSlider>
+    with WidgetsBindingObserver {
   late final PageController _controller;
   late final List<ImageProvider<Object>> _images;
   Timer? _timer;
@@ -48,6 +57,7 @@ class _CustomSliderState extends State<CustomSlider> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _images = _imageProviders;
     _controller = PageController(initialPage: _initialPage);
 
@@ -56,7 +66,16 @@ class _CustomSliderState extends State<CustomSlider> {
     }
   }
 
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _timer?.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
+
   void _startAutoSlide() {
+    _timer?.cancel(); // Cancel any existing timer
     _timer = Timer.periodic(widget.switchDuration, (_) {
       if (_controller.hasClients) {
         _currentIndex++;
@@ -69,11 +88,18 @@ class _CustomSliderState extends State<CustomSlider> {
     });
   }
 
-  @override
-  void dispose() {
+  void _stopAutoSlide() {
     _timer?.cancel();
-    _controller.dispose();
-    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _stopAutoSlide(); // Stop when app is in background or inactive
+    } else if (state == AppLifecycleState.resumed) {
+      _startAutoSlide(); // Resume when app comes to foreground
+    }
   }
 
   @override
@@ -93,42 +119,53 @@ class _CustomSliderState extends State<CustomSlider> {
 
               return Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: Image(image: image, fit: BoxFit.cover),
-                      ),
-                      if (widget.showBottomShadow)
-                        Positioned(
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          height: 40,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              // gradient: LinearGradient(
-                              //   begin: Alignment.bottomCenter,
-                              //   end: Alignment.topCenter,
-                              //   colors: [
-                              //     Colors.black45,
-                              //     Colors.black26,
-                              //     Colors.black12,
-                              //     Colors.transparent,
-                              //   ],
-                              // ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 20,
-                                  spreadRadius: 5,
-                                ),
-                              ],
+                child: GestureDetector(
+                  onTap: () {
+                    widget.isPreviewEnabled == true
+                        ? showDialog(
+                            context: context,
+                            barrierColor: Colors.black.withValues(alpha: 0.8),
+                            builder: (_) => AlertDialog(
+                              backgroundColor: Colors.transparent,
+                              insetPadding: const EdgeInsets.all(10),
+                              contentPadding: EdgeInsets.zero,
+                              content: _ImagePreviewDialog(
+                                isButton: widget.isButton,
+                                imagePath: widget
+                                    .imagePaths[_currentIndex % _images.length],
+                              ),
+                            ),
+                          )
+                        : null;
+                  },
+
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: Image(image: image, fit: BoxFit.cover),
+                        ),
+                        if (widget.showBottomShadow)
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            height: 40,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 20,
+                                    spreadRadius: 5,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -157,14 +194,77 @@ class _CustomSliderState extends State<CustomSlider> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: isActive
-                          ? Colors.white
-                          : Colors.white.withValues(alpha: 0.4),
+                          ? (widget.activeIndicatorColor ?? Colors.white)
+                          : (widget.inactiveIndicatorColor ??
+                                Colors.white.withValues(alpha: 0.4)),
                     ),
                   );
                 }),
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _ImagePreviewDialog extends StatelessWidget {
+  final String imagePath;
+  final bool? isButton;
+
+  const _ImagePreviewDialog({required this.imagePath, this.isButton = true});
+
+  @override
+  Widget build(BuildContext context) {
+    final imageProvider = imagePath.startsWith('http')
+        ? NetworkImage(imagePath)
+        : AssetImage(imagePath) as ImageProvider;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        width: MediaQuery.of(context).size.width * 0.9,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Image(image: imageProvider, fit: BoxFit.contain),
+            ),
+            const SizedBox(height: 10),
+            if (isButton == true)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.share, color: Colors.white),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        // Add your share logic
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.download, color: Colors.white),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        // Add your download logic
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.language, color: Colors.white),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        // Add your delete logic
+                      },
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

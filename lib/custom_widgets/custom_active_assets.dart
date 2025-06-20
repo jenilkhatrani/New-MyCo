@@ -122,7 +122,7 @@ class CustomActiveAssets extends StatelessWidget {
                   painter: DottedLine(
                     dotWidth: 2,
                     dotHeight: 6,
-                    spacing: 4,
+                    spacing: 2,
                     color: AppColors.primary,
                     vertical: true,
                   ),
