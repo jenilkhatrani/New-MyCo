@@ -68,7 +68,12 @@ class _CustomImagePickerContainerState
         GestureDetector(
           onTap: () {
             if (_pickedImage == null && pickedFile == null) {
-              openImagePicker(context);
+              openImagePicker(
+                context,
+                widget.isDocumentShow ?? true,
+                widget.isCameraShow ?? true,
+                widget.isGallaryShow ?? true,
+              );
             }
           },
 
@@ -87,13 +92,13 @@ class _CustomImagePickerContainerState
                             widget.borderRadius ?? 12,
                           ),
                         ),
+                        height: widget.containerHeight ?? 160,
 
                         child: Image.file(
                           _pickedImage!,
                           width: double.infinity,
                           fit: BoxFit.cover,
                         ),
-                        height: widget.containerHeight ?? 160,
                       ),
                       Positioned(
                         right: 6,
@@ -219,10 +224,18 @@ class _CustomImagePickerContainerState
     );
   }
 
-  void openImagePicker(BuildContext context) async {
+  void openImagePicker(
+    BuildContext context,
+    bool isDocumentShow,
+    bool isCameraShow,
+    bool isGallaryShow,
+  ) async {
     final File? selectedFile = await showImageFilePicker(
       context: context,
       selectDocument: true,
+      isDocumentShow: isDocumentShow,
+      isCameraShow: isCameraShow,
+      isGallaryShow: isGallaryShow,
     );
 
     if (selectedFile != null) {
