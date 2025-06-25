@@ -1,166 +1,12 @@
-// import 'package:flutter/material.dart';
-// import 'new_myco_button.dart';
-//
-// class CustomTabBar extends StatefulWidget {
-//   final List<String> tabs;
-//   final Color selectedBgColor;
-//   final Color unselectedBorderAndTextColor;
-//   final Color tabBarBorderColor;
-//   final TextStyle? selectedTextStyle;
-//   final TextStyle? unselectedTextStyle;
-//   final double? borderRadius;
-//   final bool isShadowTopLeft;
-//   final bool isShadowTopRight;
-//   final bool isShadowBottomRight;
-//   final bool isShadowBottomLeft;
-//   final void Function(int index)? onTap;
-//
-//   const CustomTabBar({
-//     super.key,
-//     required this.tabs,
-//     required this.selectedBgColor,
-//     required this.unselectedBorderAndTextColor,
-//     this.selectedTextStyle,
-//     this.unselectedTextStyle,
-//     required this.isShadowTopLeft,
-//     required this.isShadowTopRight,
-//     required this.isShadowBottomRight,
-//     required this.isShadowBottomLeft,
-//     required this.tabBarBorderColor,
-//     this.borderRadius,
-//     this.onTap,
-//   });
-//
-//   @override
-//   State<CustomTabBar> createState() => _CustomTabBarState();
-// }
-//
-// class _CustomTabBarState extends State<CustomTabBar> {
-//   int selectedIndex = 0;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-//       decoration: BoxDecoration(
-//         border: Border.all(color: widget.tabBarBorderColor),
-//         borderRadius: BorderRadius.circular(widget.borderRadius ?? 50),
-//         color: Colors.white,
-//       ),
-//       child: Row(
-//         mainAxisSize: MainAxisSize.min,
-//         children: List.generate(widget.tabs.length, (index) {
-//           if (widget.tabs.length <= 3) {
-//             return Expanded(
-//               child: Padding(
-//                 padding: EdgeInsets.symmetric(horizontal: 4),
-//                 child: MyCoButton(
-//                   isShadowBottomLeft: selectedIndex == index
-//                       ? widget.isShadowBottomLeft
-//                       : false,
-//
-//                   isShadowBottomRight: selectedIndex == index
-//                       ? widget.isShadowBottomRight
-//                       : false,
-//
-//                   isShadowTopLeft: selectedIndex == index
-//                       ? widget.isShadowTopLeft
-//                       : false,
-//
-//                   isShadowTopRight: selectedIndex == index
-//                       ? widget.isShadowTopRight
-//                       : false,
-//                   title: widget.tabs[index],
-//                   onTap: () {
-//                     setState(() => selectedIndex = index);
-//                     widget.onTap?.call(
-//                       index,
-//                     ); // 👈 Trigger callback if provided
-//                   },
-//                   backgroundColor: index == selectedIndex
-//                       ? widget.selectedBgColor
-//                       : Colors.transparent,
-//                   borderColor: selectedIndex == index
-//                       ? null
-//                       : widget.unselectedBorderAndTextColor,
-//                   borderWidth: selectedIndex == index ? null : 1.5,
-//                   boarderRadius: widget.borderRadius ?? 50,
-//                   textStyle: index == selectedIndex
-//                       ? (widget.selectedTextStyle ??
-//                             const TextStyle(
-//                               color: Colors.white,
-//                               fontWeight: FontWeight.w600,
-//                             ))
-//                       : (widget.unselectedTextStyle ??
-//                             TextStyle(
-//                               color: widget.unselectedBorderAndTextColor,
-//                               fontWeight: FontWeight.w500,
-//                             )),
-//                 ),
-//               ),
-//             );
-//           }
-//           ;
-//           final isSelected = index == selectedIndex;
-//           return Expanded(
-//             child: Padding(
-//               padding: const EdgeInsets.symmetric(horizontal: 3),
-//               child: MyCoButton(
-//                 isShadowBottomLeft: selectedIndex == index
-//                     ? widget.isShadowBottomLeft
-//                     : false,
-//
-//                 isShadowBottomRight: selectedIndex == index
-//                     ? widget.isShadowBottomRight
-//                     : false,
-//
-//                 isShadowTopLeft: selectedIndex == index
-//                     ? widget.isShadowTopLeft
-//                     : false,
-//
-//                 isShadowTopRight: selectedIndex == index
-//                     ? widget.isShadowTopRight
-//                     : false,
-//                 title: widget.tabs[index],
-//                 onTap: () {
-//                   setState(() => selectedIndex = index);
-//                   widget.onTap?.call(index); // 👈 Trigger callback if provided
-//                 },
-//                 backgroundColor: isSelected
-//                     ? widget.selectedBgColor
-//                     : Colors.transparent,
-//                 borderColor: widget.unselectedBorderAndTextColor,
-//                 borderWidth: selectedIndex == index ? null : 1.5,
-//                 boarderRadius: widget.borderRadius ?? 50,
-//                 textStyle: isSelected
-//                     ? (widget.selectedTextStyle ??
-//                           const TextStyle(
-//                             color: Colors.white,
-//                             fontWeight: FontWeight.w600,
-//                           ))
-//                     : (widget.unselectedTextStyle ??
-//                           TextStyle(
-//                             color: widget.unselectedBorderAndTextColor,
-//                             fontWeight: FontWeight.w500,
-//                           )),
-//               ),
-//             ),
-//           );
-//         }),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:new_myco/custom_widgets/responsive.dart';
+import 'package:new_myco/themes_colors/colors.dart';
 import 'new_myco_button.dart';
 
 class CustomTabBar extends StatefulWidget {
-  final List<String> tabs;
-  final Color selectedBgColor;
-  final Color unselectedBorderAndTextColor;
-  final Color tabBarBorderColor;
+  final List<CustomTab> tabs;
+  final Color? selectedBgColor;
+  final Color? tabBarBorderColor;
   final TextStyle? selectedTextStyle;
   final TextStyle? unselectedTextStyle;
   final double? borderRadius;
@@ -177,9 +23,8 @@ class CustomTabBar extends StatefulWidget {
   const CustomTabBar({
     super.key,
     required this.tabs,
-    required this.selectedBgColor,
-    required this.unselectedBorderAndTextColor,
-    required this.tabBarBorderColor,
+    this.selectedBgColor,
+    this.tabBarBorderColor,
     this.selectedTextStyle,
     this.unselectedTextStyle,
     this.borderRadius,
@@ -208,7 +53,9 @@ class _CustomTabBarState extends State<CustomTabBar> {
       width: widget.width,
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 10),
       decoration: BoxDecoration(
-        border: Border.all(color: widget.tabBarBorderColor),
+        border: Border.all(
+          color: widget.tabBarBorderColor ?? AppColors.borderColor,
+        ),
         borderRadius: BorderRadius.circular(widget.borderRadius ?? 50),
         color: Colors.white,
       ),
@@ -217,10 +64,15 @@ class _CustomTabBarState extends State<CustomTabBar> {
         child: Row(
           children: List.generate(widget.tabs.length, (index) {
             final isSelected = index == selectedIndex;
+            final CustomTab tab = widget.tabs[index];
+            final String title = tab.title;
+            final Color unselectedColor = tab.unselectedColor;
+            final Color selectedColor = tab.selectedColor ?? AppColors.primary;
+
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 3),
               child: MyCoButton(
-                title: widget.tabs[index],
+                title: title,
                 onTap: () {
                   setState(() => selectedIndex = index);
                   widget.onTap?.call(index);
@@ -234,11 +86,9 @@ class _CustomTabBarState extends State<CustomTabBar> {
                 isShadowTopLeft: isSelected ? widget.isShadowTopLeft : false,
                 isShadowTopRight: isSelected ? widget.isShadowTopRight : false,
                 backgroundColor: isSelected
-                    ? widget.selectedBgColor
+                    ? widget.selectedBgColor ?? selectedColor
                     : Colors.transparent,
-                borderColor: isSelected
-                    ? null
-                    : widget.unselectedBorderAndTextColor,
+                borderColor: isSelected ? null : unselectedColor,
                 borderWidth: isSelected ? null : 1.5,
                 boarderRadius: widget.borderRadius ?? 50,
                 textStyle: isSelected
@@ -249,7 +99,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
                           ))
                     : (widget.unselectedTextStyle ??
                           TextStyle(
-                            color: widget.unselectedBorderAndTextColor,
+                            color: unselectedColor,
                             fontWeight: FontWeight.w500,
                           )),
                 height: widget.height,
@@ -264,4 +114,16 @@ class _CustomTabBarState extends State<CustomTabBar> {
       ),
     );
   }
+}
+
+class CustomTab {
+  final String title;
+  final Color unselectedColor;
+  final Color? selectedColor;
+
+  CustomTab({
+    required this.title,
+    required this.unselectedColor,
+    this.selectedColor,
+  });
 }
