@@ -20,6 +20,7 @@ class CustomImagePickerContainer extends StatefulWidget {
   final bool? isCameraShow;
   final bool? isGallaryShow;
   final bool? isDocumentShow;
+  final Function(File)? onImageSelected;
 
   const CustomImagePickerContainer({
     super.key,
@@ -35,6 +36,7 @@ class CustomImagePickerContainer extends StatefulWidget {
     this.isDocumentShow,
     this.imageTitle,
     this.borderColor,
+    this.onImageSelected,
   });
 
   @override
@@ -53,16 +55,13 @@ class _CustomImagePickerContainerState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.isTitle == true)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5),
-            child: Text(
-              widget.isTitle == true ? widget.title ?? "Title" : "",
-              style: const TextStyle(
-                fontSize: 14,
-                fontFamily: "Gilroy-Bold",
-                fontWeight: FontWeight.w400,
-                color: AppColors.titleColor,
-              ),
+          Text(
+            widget.isTitle == true ? widget.title ?? "Title" : "",
+            style: TextStyle(
+              fontFamily: "Gilroy-Bold",
+              fontWeight: FontWeight.w400,
+              color: AppColors.titleColor,
+              fontSize: Theme.of(context).textTheme.titleMedium?.fontSize ?? 16,
             ),
           ),
         GestureDetector(
@@ -70,9 +69,9 @@ class _CustomImagePickerContainerState
             if (_pickedImage == null && pickedFile == null) {
               openImagePicker(
                 context,
-                widget.isDocumentShow ?? true,
-                widget.isCameraShow ?? true,
-                widget.isGallaryShow ?? true,
+                widget.isDocumentShow ?? false,
+                widget.isCameraShow ?? false,
+                widget.isGallaryShow ?? false,
               );
             }
           },
@@ -80,6 +79,7 @@ class _CustomImagePickerContainerState
           child: DesignBorderContainer(
             borderRadius: widget.borderRadius ?? 12,
             width: widget.containerWidth ?? double.infinity,
+            height: widget.containerHeight ?? double.infinity,
             borderColor: widget.borderColor ?? AppColors.primary,
             backgroundColor: widget.backgroundColor ?? AppColors.imagePickerBg,
             padding: const EdgeInsets.all(0),
@@ -188,32 +188,27 @@ class _CustomImagePickerContainerState
                   )
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 50),
-                        child: Image.asset(
-                          widget.imagePath ?? 'assets/gallery-export.png',
-                          width: 30,
-                          height: 30,
-                        ),
+                      Image.asset(
+                        widget.imagePath ?? 'assets/gallery-export.png',
+                        width: 30,
+                        height: 30,
                       ),
                       const SizedBox(height: 5),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 50),
-                        child: Text(
-                          widget.imageTitle ?? 'Capture Image',
-                          style: TextStyle(
-                            fontSize:
-                                AppTheme
-                                    .lightTheme
-                                    .textTheme
-                                    .bodyLarge!
-                                    .fontSize ??
-                                16,
-                            fontFamily: "Gilroy-SemiBold",
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.titleColor,
-                          ),
+                      Text(
+                        widget.imageTitle ?? 'Capture Image',
+                        style: TextStyle(
+                          fontSize:
+                              AppTheme
+                                  .lightTheme
+                                  .textTheme
+                                  .bodyLarge!
+                                  .fontSize ??
+                              16,
+                          fontFamily: "Gilroy-SemiBold",
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.titleColor,
                         ),
                       ),
                     ],
@@ -249,6 +244,7 @@ class _CustomImagePickerContainerState
           _pickedImage = selectedFile;
           pickedFile = null;
         });
+        widget.onImageSelected?.call(selectedFile);
       } else if (extension == '.pdf' ||
           extension == '.doc' ||
           extension == '.docx') {

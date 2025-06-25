@@ -15,7 +15,7 @@ class MyCoTextField extends StatefulWidget {
   final String? hintText;
   final TextEditingController? controller;
   final void Function(String?)? onSaved;
-  final bool isSuffixIconOn;
+  final bool? isSuffixIconOn;
   final String? image1;
   final String? image2;
   final Color? color;
@@ -57,7 +57,7 @@ class MyCoTextField extends StatefulWidget {
     this.hintText,
     this.controller,
     this.onSaved,
-    required this.isSuffixIconOn,
+    this.isSuffixIconOn,
     this.image1,
     this.image2,
     this.color,
@@ -104,7 +104,7 @@ class _MyCoTextFieldState extends State<MyCoTextField> {
     return height < 1100
         ? TextFieldFormMobile(
             labelText: widget.labelText,
-            isSuffixIconOn: widget.isSuffixIconOn,
+            isSuffixIconOn: widget.isSuffixIconOn ?? false,
             controller: widget.controller,
             isLabelOn: widget.isLabelOn,
             image1: widget.image1,
@@ -184,7 +184,7 @@ class TextFieldFormTablet extends StatelessWidget {
   final FloatingLabelBehavior? floatingLabelBehavior;
   final TextEditingController? controller;
   final void Function(String?)? onSaved;
-  final bool isSuffixIconOn;
+  final bool? isSuffixIconOn;
   final String? image1;
   final String? image2;
   final Color? color;
@@ -218,7 +218,7 @@ class TextFieldFormTablet extends StatelessWidget {
     required this.labelText,
     this.controller,
     this.onSaved,
-    required this.isSuffixIconOn,
+    this.isSuffixIconOn,
     this.image1,
     this.image2,
     this.color,
@@ -298,7 +298,7 @@ class TextFieldFormTablet extends StatelessWidget {
               fontWeight: fontWeight ?? FontWeight.w500,
             ),
         prefixIcon: prefix,
-        suffixIcon: isSuffixIconOn
+        suffixIcon: isSuffixIconOn ?? false
             ? Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [

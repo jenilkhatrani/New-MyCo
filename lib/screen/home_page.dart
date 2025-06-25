@@ -1,6 +1,10 @@
+import 'dart:ui';
+import 'package:flutter/material.dart';
+
 import '../custom_widgets/bottomsheet_otp.dart';
 import '../custom_widgets/bottomsheet_radio_btn.dart';
 import '../custom_widgets/custom_pi_chart.dart';
+import '../custom_widgets/custome_shadow_container.dart';
 import '../custom_widgets/new_myco_button.dart';
 import '../custom_widgets/out_of_range_travel_mode_bottom_sheet.dart';
 import '../custom_widgets/custom_active_assets.dart';
@@ -13,6 +17,7 @@ import '../custom_widgets/custom_past_assets.dart';
 import '../custom_widgets/custom_tabbar.dart';
 import '../custom_widgets/image_grid_preview_widget.dart';
 import '../custom_widgets/custom_slider.dart';
+import '../lost_and_found/lost_and_found.dart';
 import '../main.dart';
 import 'package:flutter/material.dart';
 import '../custom_media_picker/custom_media_picker/custom_media_picker_container.dart';
@@ -36,33 +41,63 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomMediaPickerContainer(
-                  title: "Assets Image",
-                  imageTitle: "Capture Image",
-                  multipleImage: 5,
-                  imagePath: "assets/gallery-export.png",
-                  backgroundColor: Colors.blue.shade50,
-                  isCameraShow: true,
-                  isGallaryShow: true,
-                  isDocumentShow: true,
-                  // containerHeight: 200,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LostAndFound()),
+                  );
+                },
+                child: CustomShadowContainer(
+                  // height: 200,
+                  // width: 100,
+                  image: Image.asset(
+                    "assets/lost_and_found/ic_new_ui_lost_found.png",
+                  ),
+                  title: "Lost And Found",
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(20),
-                child: CustomImagePickerContainer(
-                  // isCameraShow: true,
-                  // isGallaryShow: true,
-                  // isDocumentShow: false,
-                  title: "Assets Image",
-                  imageTitle: "Capture Image",
-                  imagePath: "assets/gallery-export.png",
-                  backgroundColor: Colors.blue.shade50,
-                  containerHeight: 300,
-                ),
-              ),
+              // Container(
+              //   height: 400,
+              //   width: 300,
+              //   child: Stack(
+              //     fit: StackFit.expand,
+              //     children: [
+              //       Image.asset(
+              //         // Background image
+              //         'assets/tiger.jpeg',
+              //         fit: BoxFit.cover,
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.all(20),
+              //   child: CustomMediaPickerContainer(
+              //     title: "Assets Image",
+              //     imageTitle: "Capture Image",
+              //     multipleImage: 5,
+              //     imagePath: "assets/gallery-export.png",
+              //     backgroundColor: Colors.blue.shade50,
+              //     isCameraShow: true,
+              //     isGallaryShow: true,
+              //     isDocumentShow: true,
+              //     // containerHeight: 200,
+              //   ),
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.all(20),
+              //   child: CustomImagePickerContainer(
+              //     isCameraShow: true,
+              //     isGallaryShow: true,
+              //     isDocumentShow: true,
+              //     title: "Assets Image",
+              //     imageTitle: "Capture Image",
+              //     imagePath: "assets/gallery-export.png",
+              //     backgroundColor: Colors.blue.shade50,
+              //     // containerHeight: 300,
+              //   ),
+              // ),
               // Padding(
               //   padding: const EdgeInsets.all(8.0),
               //   child: Text(
@@ -610,147 +645,187 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      floatingActionButton: ExpandableFAB(
-        onApplyLeave: () {
-          print("Apply Leave clicked");
-        },
-        onApplyShortLeave: () {
-          print("Apply Short Leave clicked");
-        },
-      ),
+      // floatingActionButton: ExpandableFAB(
+      //   onApplyLeave: () {
+      //     print("Apply Leave clicked");
+      //   },
+      //   onApplyShortLeave: () {
+      //     print("Apply Short Leave clicked");
+      //   },
+      // ),
     );
   }
 }
 
-class ExpandableFAB extends StatefulWidget {
-  final VoidCallback onApplyLeave;
-  final VoidCallback onApplyShortLeave;
-
-  const ExpandableFAB({
-    super.key,
-    required this.onApplyLeave,
-    required this.onApplyShortLeave,
-  });
-
-  @override
-  State<ExpandableFAB> createState() => _ExpandableFABState();
-}
-
-class _ExpandableFABState extends State<ExpandableFAB>
-    with SingleTickerProviderStateMixin {
-  bool isOpen = false;
-  late AnimationController _controller;
-  late Animation<double> _scaleAnim;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 200),
-    );
-    _scaleAnim = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
-  }
-
-  void toggle() {
-    setState(() {
-      isOpen = !isOpen;
-      if (isOpen) {
-        _controller.forward();
-      } else {
-        _controller.reverse();
-      }
-    });
-  }
-
-  Widget buildOption({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return ScaleTransition(
-      scale: _scaleAnim,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 4,
-                  offset: Offset(2, 2),
-                ),
-              ],
-            ),
-            child: Text(label, style: TextStyle(fontSize: 14)),
-          ),
-          const SizedBox(width: 8),
-          FloatingActionButton.small(
-            heroTag: label,
-            backgroundColor: Colors.white,
-            onPressed: () {
-              onTap();
-              toggle();
-            },
-            child: Icon(icon, color: Colors.blue),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomRight,
-      children: [
-        if (isOpen)
-          GestureDetector(
-            onTap: toggle,
-            behavior: HitTestBehavior.opaque,
-            child: Container(color: Colors.transparent),
-          ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 80, right: 16),
-          child: isOpen
-              ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    buildOption(
-                      icon: Icons.note_add_outlined,
-                      label: "Apply Short Leave",
-                      onTap: widget.onApplyShortLeave,
-                    ),
-                    const SizedBox(height: 12),
-                    buildOption(
-                      icon: Icons.edit_calendar,
-                      label: "Apply Leave",
-                      onTap: widget.onApplyLeave,
-                    ),
-                  ],
-                )
-              : SizedBox(),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 16, bottom: 20),
-          child: FloatingActionButton(
-            onPressed: toggle,
-            backgroundColor: Colors.white,
-            child: Icon(isOpen ? Icons.close : Icons.add, color: Colors.blue),
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-}
+//
+// class GlassmorphismEffect extends StatelessWidget {
+//   final double width;
+//   final double height;
+//   final double borderRadius;
+//   final Widget? child;
+//
+//   const GlassmorphismEffect({
+//     super.key,
+//     required this.width,
+//     required this.height,
+//     this.borderRadius = 20,
+//     this.child,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return ClipRRect(
+//       borderRadius: BorderRadius.circular(borderRadius),
+//       child: BackdropFilter(
+//         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+//         child: Container(
+//           width: width,
+//           height: height,
+//           padding: const EdgeInsets.all(16),
+//           decoration: BoxDecoration(
+//             color: Colors.white.withValues(alpha: 0.1),
+//             borderRadius: BorderRadius.circular(borderRadius),
+//             border: Border.all(
+//               color: Colors.white.withValues(alpha: 0.2),
+//               width: 1,
+//             ),
+//           ),
+//           child: child ?? const SizedBox(),
+//         ),
+//       ),
+//     );
+//   }
+// }
+//
+// class ExpandableFAB extends StatefulWidget {
+//   final VoidCallback onApplyLeave;
+//   final VoidCallback onApplyShortLeave;
+//
+//   const ExpandableFAB({
+//     super.key,
+//     required this.onApplyLeave,
+//     required this.onApplyShortLeave,
+//   });
+//
+//   @override
+//   State<ExpandableFAB> createState() => _ExpandableFABState();
+// }
+//
+// class _ExpandableFABState extends State<ExpandableFAB>
+//     with SingleTickerProviderStateMixin {
+//   bool isOpen = false;
+//   late AnimationController _controller;
+//   late Animation<double> _scaleAnim;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _controller = AnimationController(
+//       vsync: this,
+//       duration: Duration(milliseconds: 200),
+//     );
+//     _scaleAnim = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+//   }
+//
+//   void toggle() {
+//     setState(() {
+//       isOpen = !isOpen;
+//       if (isOpen) {
+//         _controller.forward();
+//       } else {
+//         _controller.reverse();
+//       }
+//     });
+//   }
+//
+//   Widget buildOption({
+//     required IconData icon,
+//     required String label,
+//     required VoidCallback onTap,
+//   }) {
+//     return ScaleTransition(
+//       scale: _scaleAnim,
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.end,
+//         children: [
+//           Container(
+//             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+//             decoration: BoxDecoration(
+//               color: Colors.white,
+//               borderRadius: BorderRadius.circular(20),
+//               boxShadow: const [
+//                 BoxShadow(
+//                   color: Colors.black12,
+//                   blurRadius: 4,
+//                   offset: Offset(2, 2),
+//                 ),
+//               ],
+//             ),
+//             child: Text(label, style: TextStyle(fontSize: 14)),
+//           ),
+//           const SizedBox(width: 8),
+//           FloatingActionButton.small(
+//             heroTag: label,
+//             backgroundColor: Colors.white,
+//             onPressed: () {
+//               onTap();
+//               toggle();
+//             },
+//             child: Icon(icon, color: Colors.blue),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Stack(
+//       alignment: Alignment.bottomRight,
+//       children: [
+//         if (isOpen)
+//           GestureDetector(
+//             onTap: toggle,
+//             behavior: HitTestBehavior.opaque,
+//             child: Container(color: Colors.transparent),
+//           ),
+//         Padding(
+//           padding: const EdgeInsets.only(bottom: 80, right: 16),
+//           child: isOpen
+//               ? Column(
+//                   mainAxisSize: MainAxisSize.min,
+//                   crossAxisAlignment: CrossAxisAlignment.end,
+//                   children: [
+//                     buildOption(
+//                       icon: Icons.note_add_outlined,
+//                       label: "Apply Short Leave",
+//                       onTap: widget.onApplyShortLeave,
+//                     ),
+//                     const SizedBox(height: 12),
+//                     buildOption(
+//                       icon: Icons.edit_calendar,
+//                       label: "Apply Leave",
+//                       onTap: widget.onApplyLeave,
+//                     ),
+//                   ],
+//                 )
+//               : SizedBox(),
+//         ),
+//         Padding(
+//           padding: const EdgeInsets.only(right: 16, bottom: 20),
+//           child: FloatingActionButton(
+//             onPressed: toggle,
+//             backgroundColor: Colors.white,
+//             child: Icon(isOpen ? Icons.close : Icons.add, color: Colors.blue),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+//
+//   @override
+//   void dispose() {
+//     _controller.dispose();
+//     super.dispose();
+//   }
+// }

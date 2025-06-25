@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:new_myco/lost_and_found/add_screen.dart';
 import 'package:new_myco/screen/home_page.dart';
+import 'package:new_myco/screen/pie_chart_page.dart';
+
+import 'lost_and_found/lost_and_found.dart';
 
 void main() {
   runApp(MyApp());
