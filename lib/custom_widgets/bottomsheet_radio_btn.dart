@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_myco/custom_widgets/responsive.dart';
 import 'package:new_myco/custom_widgets/text_field.dart';
-
 import '../themes_colors/colors.dart';
 import 'new_myco_button.dart';
 import 'new_myco_button_theme.dart';
@@ -16,7 +15,9 @@ class BottomsheetRadioButton extends StatefulWidget {
   final double? titleImageHeight;
   final double? titleImageWidth;
   final String? title;
+  final String? searchBarHintText;
   final bool showSnackBar;
+  final Widget? textFieldPrefixIcon;
 
   const BottomsheetRadioButton({
     super.key,
@@ -30,6 +31,8 @@ class BottomsheetRadioButton extends StatefulWidget {
     this.titleImageWidth,
     this.height,
     this.width,
+    this.textFieldPrefixIcon,
+    this.searchBarHintText,
   });
 
   @override
@@ -100,10 +103,12 @@ class _BottomsheetRadioButtonState extends State<BottomsheetRadioButton> {
             ),
           MyCoTextField(
             isSuffixIconOn: true,
-            hintText: "Enter Your Company Name",
+            hintText: widget.searchBarHintText ?? "Enter Your Company Name",
             hintTextStyle: TextStyle(color: AppColors.black),
             color: AppColors.borderColor,
-            prefix: Icon(Icons.apartment, color: AppColors.primary),
+            prefix:
+                widget.textFieldPrefixIcon ??
+                const Icon(Icons.apartment, color: AppColors.primary),
             onChanged: (value) {
               setState(() {
                 searchQuery = value;
@@ -119,6 +124,7 @@ class _BottomsheetRadioButtonState extends State<BottomsheetRadioButton> {
                 final isSelected = selectedItem == item['id'];
 
                 return Container(
+                  // height: 100,
                   margin: const EdgeInsets.symmetric(vertical: 6),
                   decoration: BoxDecoration(
                     color: isSelected ? AppColors.primary : Colors.white,
@@ -170,7 +176,7 @@ class _BottomsheetRadioButtonState extends State<BottomsheetRadioButton> {
                         color: isSelected ? AppColors.white : null,
                       ),
                     ),
-                    isThreeLine: true,
+                    isThreeLine: false,
                     subtitle: Text(
                       item['subtitle']!,
                       style: TextStyle(
