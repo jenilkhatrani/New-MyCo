@@ -75,7 +75,7 @@ class _CustomSliderState extends State<CustomSlider>
   }
 
   void _startAutoSlide() {
-    _timer?.cancel(); // Cancel any existing timer
+    _timer?.cancel();
     _timer = Timer.periodic(widget.switchDuration, (_) {
       if (_controller.hasClients) {
         _currentIndex++;
@@ -96,9 +96,9 @@ class _CustomSliderState extends State<CustomSlider>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
-      _stopAutoSlide(); // Stop when app is in background or inactive
+      _stopAutoSlide();
     } else if (state == AppLifecycleState.resumed) {
-      _startAutoSlide(); // Resume when app comes to foreground
+      _startAutoSlide();
     }
   }
 
@@ -243,21 +243,18 @@ class _ImagePreviewDialog extends StatelessWidget {
                       icon: const Icon(Icons.share, color: Colors.white),
                       onPressed: () {
                         Navigator.pop(context);
-                        // Add your share logic
                       },
                     ),
                     IconButton(
                       icon: const Icon(Icons.download, color: Colors.white),
                       onPressed: () {
                         Navigator.pop(context);
-                        // Add your download logic
                       },
                     ),
                     IconButton(
                       icon: const Icon(Icons.language, color: Colors.white),
                       onPressed: () {
                         Navigator.pop(context);
-                        // Add your delete logic
                       },
                     ),
                   ],
