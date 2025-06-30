@@ -16,6 +16,7 @@ class CustomTabBar extends StatefulWidget {
   final bool isShadowBottomLeft;
   final bool isThreeTabs;
   final bool isTabBarBorder;
+  final bool isTabBorder;
   final void Function(int index)? onTap;
   final double? height;
   final double? width;
@@ -39,6 +40,7 @@ class CustomTabBar extends StatefulWidget {
     this.buttonWidth,
     this.isThreeTabs = false,
     this.isTabBarBorder = true,
+    this.isTabBorder = true,
   });
 
   @override
@@ -93,8 +95,13 @@ class _CustomTabBarState extends State<CustomTabBar> {
                 backgroundColor: isSelected
                     ? widget.selectedBgColor ?? selectedColor
                     : Colors.transparent,
-                borderColor: isSelected ? null : unselectedColor,
-                borderWidth: isSelected ? null : 1.5,
+                borderColor: isSelected
+                    ? Colors.transparent
+                    : (widget.isTabBorder
+                          ? unselectedColor
+                          : Colors.transparent),
+                borderWidth: isSelected ? 0 : (widget.isTabBorder ? 1.5 : 0),
+
                 boarderRadius: widget.borderRadius ?? 50,
                 textStyle: isSelected
                     ? (widget.selectedTextStyle ??
