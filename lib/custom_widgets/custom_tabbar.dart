@@ -15,6 +15,7 @@ class CustomTabBar extends StatefulWidget {
   final bool isShadowBottomRight;
   final bool isShadowBottomLeft;
   final bool isThreeTabs;
+  final bool isTabBarBorder;
   final void Function(int index)? onTap;
   final double? height;
   final double? width;
@@ -37,6 +38,7 @@ class CustomTabBar extends StatefulWidget {
     this.isShadowBottomLeft = false,
     this.buttonWidth,
     this.isThreeTabs = false,
+    this.isTabBarBorder = true,
   });
 
   @override
@@ -53,11 +55,13 @@ class _CustomTabBarState extends State<CustomTabBar> {
       width: widget.width,
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 10),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: widget.tabBarBorderColor ?? AppColors.borderColor,
-        ),
+        // color: Colors.red,
+        border: widget.isTabBarBorder == true
+            ? Border.all(
+                color: widget.tabBarBorderColor ?? AppColors.borderColor,
+              )
+            : null,
         borderRadius: BorderRadius.circular(widget.borderRadius ?? 50),
-        color: Colors.white,
       ),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -72,6 +76,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 3),
               child: MyCoButton(
+                // spacing: 20,
                 title: title,
                 onTap: () {
                   setState(() => selectedIndex = index);
