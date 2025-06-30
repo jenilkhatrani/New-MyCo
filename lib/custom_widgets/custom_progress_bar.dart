@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../themes_colors/colors.dart';
 import 'custom_inner_shadow.dart';
 
@@ -11,6 +10,10 @@ class CustomSegmentedProgressBar extends StatelessWidget {
   final double? width;
   final double spacing;
   final Color? defaultColor;
+  final bool? isShadowBottomRight;
+  final bool? isShadowBottomLeft;
+  final bool? isShadowTopLeft;
+  final bool? isShadowTopRight;
 
   const CustomSegmentedProgressBar({
     super.key,
@@ -21,20 +24,24 @@ class CustomSegmentedProgressBar extends StatelessWidget {
     this.spacing = 2,
     this.width = double.infinity,
     this.defaultColor,
+    this.isShadowBottomRight = false,
+    this.isShadowBottomLeft = false,
+    this.isShadowTopLeft = false,
+    this.isShadowTopRight = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (percentComplete > 100) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Progress cannot exceed 100%"),
-            backgroundColor: Colors.red,
-          ),
-        );
-      });
-    }
+    // if (percentComplete > 100) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       const SnackBar(
+    //         content: Text("Progress cannot exceed 100%"),
+    //         backgroundColor: Colors.red,
+    //       ),
+    //     );
+    //   });
+    // }
 
     final progress = (percentComplete.clamp(0, 100)) / 100.0;
 
@@ -77,8 +84,11 @@ class CustomSegmentedProgressBar extends StatelessWidget {
                         height: height,
                         width: segmentWidth,
                         borderRadius: (height ?? 12 / 2),
-                        backgroundColor: Colors.white,
-                        isShadowBottomRight: true,
+                        // backgroundColor: Colors.grey,
+                        isShadowBottomRight: isShadowBottomRight ?? false,
+                        isShadowTopLeft: isShadowTopLeft ?? false,
+                        isShadowTopRight: isShadowTopRight ?? false,
+                        isShadowBottomLeft: isShadowBottomLeft ?? false,
                         alignment: Alignment.center,
                         child: const SizedBox(),
                       );
@@ -88,32 +98,6 @@ class CustomSegmentedProgressBar extends StatelessWidget {
               ),
             ),
 
-            // ClipRect(
-            //   child: Align(
-            //     alignment: Alignment.centerLeft,
-            //     widthFactor: progress.clamp(0.0, 1.0),
-            //     child: ShaderMask(
-            //       shaderCallback: (bounds) {
-            //         return LinearGradient(colors: gradientColors).createShader(
-            //           Rect.fromLTWH(0, 0, bounds.width, bounds.height),
-            //         );
-            //       },
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: List.generate(totalSegments, (index) {
-            //           return Container(
-            //             width: segmentWidth,
-            //             height: height,
-            //             decoration: BoxDecoration(
-            //               color: Colors.white,
-            //               borderRadius: BorderRadius.circular(height ?? 12 / 2),
-            //             ),
-            //           );
-            //         }),
-            //       ),
-            //     ),
-            //   ),
-            // ),
             Positioned(
               left: (progress * totalWidth) - 20,
               top: -50,
@@ -125,8 +109,9 @@ class CustomSegmentedProgressBar extends StatelessWidget {
                     backgroundColor: AppColors.primary,
                     borderRadius: 50,
                     isShadowBottomLeft: true,
+
                     child: Text(
-                      "$percentComplete%",
+                      "$percentComplete",
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
