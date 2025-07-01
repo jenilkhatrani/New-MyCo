@@ -8,6 +8,7 @@ import '../custom_widgets/bottomsheet_radio_btn.dart';
 import '../custom_widgets/custom_face_scanner.dart';
 import '../custom_widgets/custom_pi_chart.dart';
 import '../custom_widgets/custom_inner_shadow.dart';
+import '../custom_widgets/custom_stepper.dart';
 import '../custom_widgets/custome_shadow_container.dart';
 import '../custom_widgets/new_myco_button.dart';
 import '../custom_widgets/out_of_range_travel_mode_bottom_sheet.dart';
@@ -58,64 +59,230 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: AppBar(title: Text("MyCo Components")),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text("MyCo Components"),
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                children: [
-                  InnerShadowContainer(
-                    height: 100,
-                    width: 100,
-                    backgroundColor: Colors.yellow,
-                    borderRadius: 10,
-                    child: Text("Radha"),
-
-                    isShadowTopLeft: true,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LostAndFound()),
+                  );
+                },
+                child: CustomShadowContainer(
+                  // height: 200,
+                  // width: 100,
+                  image: Image.asset(
+                    "assets/lost_and_found/ic_new_ui_lost_found.png",
                   ),
-                  SizedBox(width: 10),
-                  InnerShadowContainer(
-                    height: 100,
-                    width: 100,
-                    backgroundColor: Colors.yellow,
-                    borderRadius: 10,
-                    child: Text("Radha"),
+                  title: "Lost And Found",
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: CustomVerticalStepper(
+                  steps: [
+                    StepData(
+                      title: 'Order Placed',
+                      status: StepStatus.completed,
+                    ),
+                    StepData(title: 'Processing', status: StepStatus.pending),
+                    StepData(
+                      title: 'Shipped',
+                      status: StepStatus.approved,
+                      isStepDisabled: false,
+                    ),
+                    StepData(
+                      title: 'Returned',
+                      status: StepStatus.denied,
 
-                    isShadowTopRight: true,
-                  ),
-                ],
+                      // isStepDisabled: true,
+                    ),
+                  ],
+                  // globalStatus: StepStatus.denied,
+                ),
+              ),
+
+              // Padding(
+              //   padding: const EdgeInsets.all(10.0),
+              //   child: CustomStepper(
+              //     steps: [
+              //       StepData(
+              //         title: 'Order Placed',
+              //         status: StepStatus.completed,
+              //         details: [
+              //           StepDetail(title: 'Date', description: '2023-01-15'),
+              //           StepDetail(title: 'Time', description: '10:00 AM'),
+              //         ],
+              //       ),
+              //       StepData(
+              //         title: 'Processing',
+              //         status: StepStatus.pending,
+              //         details: [
+              //           StepDetail(
+              //             title: 'Estimated Completion',
+              //             description: '24-48 hours',
+              //           ),
+              //         ],
+              //       ),
+              //       StepData(
+              //         title: 'Shipped',
+              //         status: StepStatus.approved,
+              //         isStepDisabled: false,
+              //         details: [
+              //           StepDetail(
+              //             title: 'Tracking ID',
+              //             description: 'XYZ12345',
+              //           ),
+              //         ],
+              //       ),
+              //       StepData(
+              //         title: 'Returned',
+              //         status: StepStatus.denied,
+              //         details: [
+              //           StepDetail(
+              //             title: 'Tracking ID',
+              //             description: 'XYZ12345',
+              //           ),
+              //         ],
+              //       ),
+              //     ],
+              //     isHorizontal: true, // Set this to false to switch to vertical
+              //   ),
+              // ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    InnerShadowContainer(
+                      height: 100,
+                      width: 100,
+
+                      backgroundColor: Colors.yellow,
+                      borderRadius: 10,
+
+                      isShadowTopLeft: true,
+                      child: Text("Radha"),
+                    ),
+                    SizedBox(width: 10),
+                    InnerShadowContainer(
+                      height: 100,
+                      width: 100,
+                      backgroundColor: Colors.yellow,
+                      borderRadius: 10,
+
+                      isShadowTopRight: true,
+                      child: Text("Radha"),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(width: 10),
 
-              Row(
-                children: [
-                  InnerShadowContainer(
-                    height: 100,
-                    width: 100,
-                    backgroundColor: Colors.yellow,
-                    borderRadius: 10,
-                    child: Text("Radha"),
-                    // isShadowBottomRight: true,
-                    isShadowBottomLeft: true,
-                    // isShadowTopLeft: true,
-                    // isShadowTopRight: true,
-                  ),
-                  SizedBox(width: 10),
-                  InnerShadowContainer(
-                    height: 100,
-                    width: 100,
-                    backgroundColor: Colors.yellow,
-                    borderRadius: 10,
-                    child: Text("Radha"),
-                    isShadowBottomRight: true,
-                    // isShadowTopLeft: true,
-                    // isShadowTopRight: true,
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    InnerShadowContainer(
+                      height: 100,
+                      width: 100,
+                      backgroundColor: Colors.yellow,
+                      borderRadius: 10,
+                      // isShadowBottomRight: true,
+                      isShadowBottomLeft: true,
+                      child: Text("Radha"),
+                      // isShadowTopLeft: true,
+                      // isShadowTopRight: true,
+                    ),
+                    SizedBox(width: 10),
+                    InnerShadowContainer(
+                      height: 100,
+                      width: 100,
+                      backgroundColor: Colors.yellow,
+                      borderRadius: 10,
+                      isShadowBottomRight: true,
+                      child: Text("Radha"),
+                      // isShadowTopLeft: true,
+                      // isShadowTopRight: true,
+                    ),
+                  ],
+                ),
               ),
 
+              SizedBox(height: 50),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CustomSlider(
+                  isPreviewEnabled: true,
+                  // imageFit: BoxFit.contain,
+                  imagePaths: ["assets/banner1.jpg", "assets/banner2.png"],
+                  isCarousel: true,
+                  isButton: true,
+                  showBottomShadow: false,
+                  showIndicator: false,
+                  height: 200,
+                  width: double.infinity,
+                  switchDuration: const Duration(seconds: 7),
+                  animationDuration: const Duration(seconds: 7),
+                ),
+              ),
+              SizedBox(height: 50),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomTabBar(
+                  isSelectedTabBorder: false,
+                  // selectedTabBorderColor: Colors.black,
+                  // isTabBorder: false,
+                  // isTabBarBorder: false,
+                  // height: 70,
+                  // width: 300,
+                  borderRadius: 200,
+                  buttonWidth: 120,
+                  // isThreeTabs: true,
+                  isShadowBottomRight: false,
+                  isShadowBottomLeft: true,
+                  isShadowTopLeft: false,
+                  isShadowTopRight: false,
+                  tabs: [
+                    CustomTab(
+                      title: "Approver hy",
+                      unselectedColor: AppColors.primary,
+                      selectedColor: Colors.red,
+                    ),
+                    CustomTab(
+                      title: "Pending",
+                      unselectedColor: AppColors.remove,
+                      selectedColor: Colors.pink,
+                    ),
+                    CustomTab(
+                      title: "Rejected",
+                      unselectedColor: AppColors.GPSMediumColor,
+                    ),
+                    CustomTab(
+                      title: "Approver",
+                      unselectedColor: AppColors.primary,
+                      selectedColor: Colors.red,
+                    ),
+                    CustomTab(
+                      title: "Pending",
+                      unselectedColor: AppColors.remove,
+                      selectedColor: Colors.pink,
+                    ),
+                    CustomTab(
+                      title: "Rejected",
+                      unselectedColor: AppColors.GPSMediumColor,
+                    ),
+                  ],
+                  // selectedBgColor: AppColors.secondPrimary,
+                  tabBarBorderColor: AppColors.primary,
+                ),
+              ),
               SizedBox(height: 100),
               // Padding(
               //   padding: const EdgeInsets.all(8.0),
@@ -149,10 +316,10 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: CustomSegmentedProgressBar(
+                  isShadowBottomRight: true,
                   spacing: 10, // height: 15,
-                  // defaultColor: Colors.red,
                   totalSegments: 4,
-                  percentComplete: 100,
+                  percentComplete: 99,
                   gradientColors: [
                     AppColors.primary,
                     AppColors.secondPrimary,
@@ -215,23 +382,6 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: 50),
 
-              //
-              // GestureDetector(
-              //   onTap: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(builder: (context) => LostAndFound()),
-              //     );
-              //   },
-              //   child: CustomShadowContainer(
-              //     // height: 200,
-              //     // width: 100,
-              //     image: Image.asset(
-              //       "assets/lost_and_found/ic_new_ui_lost_found.png",
-              //     ),
-              //     title: "Lost And Found",
-              //   ),
-              // ),
               //
               // Padding(
               //   padding: const EdgeInsets.all(8.0),
@@ -742,29 +892,7 @@ class _HomePageState extends State<HomePage> {
 //     style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
 //   ),
 // ),
-// Padding(
-//   padding: EdgeInsets.all(8.0),
-//   child: CustomSlider(
-//     isPreviewEnabled: true,
-//
-//     imagePaths: [
-//       "https://assetscdn1.paytm.com/images/catalog/product/H/HO/HOMMY-MAGIC-GIFMY-M778691FD4EEE57/1563033342582_0..jpg?imwidth=540&impolicy=hq",
-//       "https://static.vecteezy.com/system/resources/thumbnails/048/162/647/small_2x/two-snow-covered-trees-in-a-white-landscape-photo.jpg",
-//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8IxE78frqZkL71tLAjJqwtAK_udZkqfHv2Q&s",
-//       "https://static.vecteezy.com/system/resources/thumbnails/024/703/613/small/amazing-still-reflections-at-lake-surrounded-by-mountains-created-with-generative-ai-photo.jpg",
-//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHeCXBXlxKN4BO9ezT6nHiIv2E2A-DGyg_DesSRMivFNaAsdtTRdOOxa6BzCxKbTAByPE&usqp=CAU",
-//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTu9pPTi6sJYwiM_MHafuDFQczkTQJABENfg&s",
-//     ],
-//     isCarousel: true,
-//     isButton: true,
-//     showBottomShadow: true,
-//     showIndicator: false,
-//     height: 200,
-//     width: double.infinity,
-//     switchDuration: const Duration(seconds: 7),
-//     animationDuration: const Duration(seconds: 7),
-//   ),
-// ),
+
 // Padding(
 //   padding: const EdgeInsets.all(8.0),
 //   child: Text(
