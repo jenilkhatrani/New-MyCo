@@ -273,7 +273,8 @@ class _LostAndFoundAddScreenState extends State<LostAndFoundAddScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: MyCoTextField(
-                height: 144,
+                height: 200,
+                // height: 144,
                 maxLenght: 5,
                 fillColor: Colors.white,
                 controller: aboutItemController,

@@ -192,15 +192,14 @@ class _LostAndFoundState extends State<LostAndFound> {
                   final status = item['status'] ?? 'Lost';
 
                   return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ItemDetailsScreen(item: item),
-                        ),
-                      );
-                    },
-
+                    // onTap: () {
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) => ItemDetailsScreen(item: item),
+                    //     ),
+                    //   );
+                    // },
                     child: Container(
                       height: 150,
                       width: 155,
