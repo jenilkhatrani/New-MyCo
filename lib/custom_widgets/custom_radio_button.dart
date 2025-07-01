@@ -47,13 +47,14 @@ class _CustomRadioButtonState extends State<CustomRadioButton> {
                 fontFamily: "Gilroy-Bold",
                 fontWeight: FontWeight.w400,
                 color: AppColors.titleColor,
-                fontSize:
-                    Theme.of(context).textTheme.titleMedium?.fontSize ?? 16,
+                fontSize: 13,
               ),
             ),
           ),
           // const SizedBox(height: 10),
         ],
+        SizedBox(height: 5),
+
         Row(
           children: widget.options.map((option) {
             final isSelected = selectedOption == option;
@@ -74,7 +75,7 @@ class _CustomRadioButtonState extends State<CustomRadioButton> {
                       color: isSelected
                           ? AppColors.primary
                           : Colors.grey.shade400,
-                      width: 1.8,
+                      width: 1,
                     ),
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -108,9 +109,10 @@ class _CustomRadioButtonState extends State<CustomRadioButton> {
                       Text(
                         option,
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: "Gilroy-SemiBold",
                           color: isSelected ? AppColors.primary : Colors.grey,
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                       ),
                     ],

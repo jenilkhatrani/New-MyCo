@@ -12,6 +12,7 @@ class InnerShadowContainer extends StatelessWidget {
   final bool isShadowBottomLeft;
   final Widget? child;
   final AlignmentGeometry alignment;
+  final BoxBorder? border;
 
   const InnerShadowContainer({
     super.key,
@@ -25,6 +26,7 @@ class InnerShadowContainer extends StatelessWidget {
     this.isShadowBottomLeft = false,
     this.child,
     this.alignment = Alignment.center,
+    this.border,
   });
 
   @override
@@ -38,6 +40,7 @@ class InnerShadowContainer extends StatelessWidget {
           decoration: BoxDecoration(
             color: backgroundColor,
             borderRadius: BorderRadius.circular(borderRadius),
+            border: border,
           ),
           child: child,
         ),

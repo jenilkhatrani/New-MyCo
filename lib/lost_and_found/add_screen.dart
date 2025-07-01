@@ -161,6 +161,7 @@ import 'package:new_myco/custom_widgets/text_field.dart';
 
 import '../custom_widgets/custom_radio_button.dart';
 import '../custom_widgets/new_myco_button.dart';
+import '../custom_widgets/responsive.dart';
 import '../themes_colors/colors.dart';
 
 class LostAndFoundAddScreen extends StatefulWidget {
@@ -179,29 +180,30 @@ class _LostAndFoundAddScreenState extends State<LostAndFoundAddScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.scaffoldBackgroundColor,
         title: const Text("Lost And Found"),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 20),
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: CustomImagePickerContainer(
+                iconSize: 20,
                 title: "Select Image",
                 isTitle: true,
                 isGallaryShow: true,
                 isCameraShow: true,
                 isDocumentShow: false,
                 borderRadius: 10,
-
                 containerHeight: 71,
-
                 imageTitle: "Select image",
-                // backgroundColor: App,
+
                 onImageSelected: (file) {
                   setState(() {
                     selectedImage = file;
@@ -234,47 +236,56 @@ class _LostAndFoundAddScreenState extends State<LostAndFoundAddScreen> {
                   fontFamily: "Gilroy-Bold",
                   fontWeight: FontWeight.w400,
                   color: AppColors.titleColor,
-                  fontSize:
-                      Theme.of(context).textTheme.titleMedium?.fontSize ?? 16,
+                  fontSize: 13,
                 ),
               ),
             ),
+            SizedBox(height: 5),
+
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: EdgeInsets.symmetric(horizontal: 32),
               child: MyCoTextField(
+                maxLenght: 1,
                 controller: itemNameController,
-                height: 44,
+                // height: 44,
                 isSuffixIconOn: true,
                 hintText: "Type here",
                 isLabelOn: true,
                 hintTextStyle: TextStyle(color: AppColors.borderColor),
-                preFixImage: "assets/lost_and_found/item-name.png",
+                prefix: _prefixIcon("assets/lost_and_found/item-name.png"),
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Text(
                 "About Item",
                 style: TextStyle(
-                  fontSize:
-                      Theme.of(context).textTheme.titleMedium?.fontSize ?? 16,
+                  fontSize: 13,
                   fontFamily: "Gilroy-Bold",
                   fontWeight: FontWeight.w400,
                   color: AppColors.titleColor,
                 ),
               ),
             ),
+            SizedBox(height: 5),
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: MyCoTextField(
-                controller: aboutItemController,
                 height: 144,
+                maxLenght: 5,
+                fillColor: Colors.white,
+                controller: aboutItemController,
                 isSuffixIconOn: true,
                 hintText: "Type here",
-                hintTextStyle: TextStyle(color: AppColors.borderColor),
+                hintTextStyle: TextStyle(
+                  color: AppColors.borderColor,
+                  fontFamily: "Gilroy-SemiBold",
+                  fontWeight: FontWeight.w400,
+                ),
                 isLabelOn: true,
-                preFixImage: "assets/lost_and_found/message-edit.png",
+                prefix: _prefixIcon("assets/lost_and_found/message-edit.png"),
               ),
             ),
             const SizedBox(height: 80),
@@ -309,7 +320,7 @@ class _LostAndFoundAddScreenState extends State<LostAndFoundAddScreen> {
               });
             }
           },
-          title: 'Submit',
+          title: 'SUBMIT',
           boarderRadius: 50,
           isShadowBottomLeft: true,
           backgroundColor: AppColors.primary,
@@ -317,11 +328,22 @@ class _LostAndFoundAddScreenState extends State<LostAndFoundAddScreen> {
           width: double.infinity,
           textStyle: const TextStyle(
             color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            fontFamily: "Inter",
           ),
         ),
       ),
     );
   }
+
+  Widget _prefixIcon(String assetPath) => Padding(
+    padding: EdgeInsets.all(12.0) * getResponsive(context),
+    child: Image.asset(
+      assetPath,
+      width: 0.020 * getWidth(context),
+      height: 0.20 * getHeight(context),
+      fit: BoxFit.contain,
+    ),
+  );
 }

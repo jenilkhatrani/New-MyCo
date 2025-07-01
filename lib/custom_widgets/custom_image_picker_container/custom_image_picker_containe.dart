@@ -11,6 +11,7 @@ class CustomImagePickerContainer extends StatefulWidget {
   final double? containerHeight;
   final double? containerWidth;
   final double? borderRadius;
+  final double? iconSize;
   final String? title;
   final Color? backgroundColor;
   final Color? borderColor;
@@ -37,6 +38,7 @@ class CustomImagePickerContainer extends StatefulWidget {
     this.imageTitle,
     this.borderColor,
     this.onImageSelected,
+    this.iconSize,
   });
 
   @override
@@ -61,9 +63,11 @@ class _CustomImagePickerContainerState
               fontFamily: "Gilroy-Bold",
               fontWeight: FontWeight.w400,
               color: AppColors.titleColor,
-              fontSize: Theme.of(context).textTheme.titleMedium?.fontSize ?? 16,
+              fontSize: 13,
             ),
           ),
+        SizedBox(height: 5),
+
         GestureDetector(
           onTap: () {
             if (_pickedImage == null && pickedFile == null) {
@@ -192,20 +196,14 @@ class _CustomImagePickerContainerState
                     children: [
                       Image.asset(
                         widget.imagePath ?? 'assets/gallery-export.png',
-                        width: 30,
-                        height: 30,
+                        width: widget.iconSize ?? 30,
+                        height: widget.iconSize ?? 30,
                       ),
                       const SizedBox(height: 5),
                       Text(
                         widget.imageTitle ?? 'Capture Image',
                         style: TextStyle(
-                          fontSize:
-                              AppTheme
-                                  .lightTheme
-                                  .textTheme
-                                  .bodyLarge!
-                                  .fontSize ??
-                              16,
+                          fontSize: 14,
                           fontFamily: "Gilroy-SemiBold",
                           fontWeight: FontWeight.w400,
                           color: AppColors.titleColor,
